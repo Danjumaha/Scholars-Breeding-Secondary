@@ -1,0 +1,855 @@
+  <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scholar's Breeding | WAEC, NECO, GCE & JAMB Prep Platform</title>
+    
+    <!-- ✅ PAYSTACK INLINE JS -->
+    <script src="https://js.paystack.co/v1/inline.js"></script>
+    
+    <!-- ✅ FIREBASE SDK -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        // ✅ NEW FIREBASE CONFIG
+        const firebaseConfig = {
+            apiKey: "AIzaSyCA2OAE_5ai1tXEObm_WGvkYU-oN8p0y1I",
+            authDomain: "scholars-sec.firebaseapp.com",
+            projectId: "scholars-sec",
+            storageBucket: "scholars-sec.firebasestorage.app",
+            messagingSenderId: "3212998590",
+            appId: "1:3212998590:web:cec8072993ebde0b4aebef"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        window.db = db;
+        window.firestoreFns = { collection, addDoc, query, where, getDocs };
+    </script>
+
+    <style>
+        :root {
+            --primary: #667eea;
+            --secondary: #764ba2;
+            --gold: #ffd700;
+            --dark: #1a202c;
+            --light: #f7fafc;
+            --white: #ffffff;
+            --text-gray: #4a5568;
+            --border-color: #e2e8f0;
+            --success: #48bb78;
+            --danger: #f56565;
+            --telegram-blue: #0088cc;
+            --telegram-light: #229ED9;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background: var(--light); color: var(--dark); overflow-x: hidden; line-height: 1.6; }
+        .hidden { display: none !important; }
+
+        /* ============ HEADER ============ */
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 15px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+        .logo-container { display: flex; align-items: center; gap: 15px; }
+        .logo {
+            width: 50px; height: 50px; object-fit: contain;
+        }
+        .school-name h1 { 
+            color: var(--primary); 
+            font-size: 1.4rem; 
+            font-weight: 800; 
+            letter-spacing: -0.5px;
+        }
+        .school-name p { 
+            color: var(--text-gray); 
+            font-size: 0.8rem; 
+            margin-top: 2px; 
+            font-weight: 500;
+        }
+        
+        .nav-btn {
+            padding: 8px 20px; 
+            border: 2px solid var(--primary); 
+            background: transparent;
+            color: var(--primary); 
+            border-radius: 25px; 
+            font-weight: 600; 
+            cursor: pointer; 
+            transition: 0.3s; 
+            font-size: 0.9rem;
+        }
+        .nav-btn:hover { background: var(--primary); color: white; }
+
+        /* ============ HERO SLIDER ============ */
+        .hero-slider { position: relative; height: 550px; overflow: hidden; }
+        .slide {
+            position: absolute; width: 100%; height: 100%; opacity: 0;
+            transition: opacity 1s ease-in-out; background-size: cover;
+            background-position: center; display: flex; align-items: center; justify-content: center;
+        }
+        .slide.active { opacity: 1; }
+        .slide::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(to right, rgba(26, 32, 44, 0.8), rgba(102, 126, 234, 0.6)); 
+        }
+        .slide-content {
+            position: relative; z-index: 2; text-align: center; color: white;
+            max-width: 700px; padding: 0 20px; animation: slideUp 0.8s ease;
+        }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .slide-content h2 { font-size: 2.2rem; margin-bottom: 15px; text-shadow: 2px 2px 8px rgba(0,0,0,0.3); font-weight: 700; line-height: 1.2; }
+        .slide-content p { font-size: 1.1rem; margin-bottom: 25px; line-height: 1.5; opacity: 0.9; }
+        
+        .hero-btn-large {
+            background: var(--gold); 
+            color: #744210; 
+            padding: 15px 35px; 
+            border: none; 
+            border-radius: 30px; 
+            font-size: 1.1rem; 
+            font-weight: 700; 
+            cursor: pointer; 
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2); 
+            transition: transform 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .hero-btn-large:hover { transform: translateY(-3px); box-shadow: 0 15px 30px rgba(0,0,0,0.3); }
+
+        .slider-dots { position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); display: flex; gap: 8px; z-index: 10; }
+        .dot { width: 10px; height: 10px; border-radius: 50%; background: rgba(255,255,255,0.4); cursor: pointer; transition: all 0.3s; }
+        .dot.active { background: white; width: 25px; border-radius: 5px; }
+
+        /* ============ TELEGRAM SECTIONS ============ */
+        .telegram-hero-banner {
+            background: #eef7fe;
+            padding: 25px 20px;
+            text-align: center;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .telegram-grid-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .tg-action-btn {
+            padding: 14px 28px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+        }
+        .tg-channel-theme { background: var(--telegram-blue); color: white; }
+        .tg-channel-theme:hover { background: #0077b3; transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0, 136, 204, 0.3); }
+        .tg-chat-theme { background: var(--telegram-light); color: white; }
+        .tg-chat-theme:hover { background: #1d8bc0; transform: translateY(-2px); box-shadow: 0 6px 20px rgba(34, 158, 217, 0.3); }
+
+        /* ============ SECTIONS ============ */
+        .section-title { text-align: center; margin-bottom: 50px; padding-top: 20px; }
+        .section-title h2 { font-size: 2rem; color: var(--dark); margin-bottom: 10px; position: relative; display: inline-block; }
+        .section-title h2::after { content: ''; position: absolute; bottom: -8px; left: 50%; transform: translateX(-50%); width: 60px; height: 3px; background: linear-gradient(135deg, var(--primary), var(--secondary)); border-radius: 2px; }
+        .section-title p { color: var(--text-gray); font-size: 1rem; max-width: 600px; margin: 15px auto 0; }
+
+        /* Features */
+        .features { padding: 60px 20px; max-width: 1200px; margin: 0 auto; }
+        .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; }
+        .feature-card { background: white; padding: 30px 25px; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.03); transition: transform 0.3s; text-align: center; border: 1px solid var(--border-color); }
+        .feature-card:hover { transform: translateY(-5px); border-color: var(--primary); }
+        .feature-icon { width: 60px; height: 60px; background: rgba(102, 126, 234, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px; font-size: 1.8rem; color: var(--primary); }
+        .feature-card h3 { font-size: 1.2rem; color: var(--dark); margin-bottom: 10px; }
+        .feature-card p { color: var(--text-gray); font-size: 0.9rem; }
+
+        /* Subject Categories */
+        .curriculum-section { background: white; padding: 60px 20px; }
+        .dept-grid { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
+        .dept-card { background: var(--light); padding: 30px; border-radius: 15px; border-left: 5px solid var(--primary); }
+        .dept-card h3 { font-size: 1.3rem; color: var(--primary); margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
+        .dept-list { list-style: none; }
+        .dept-list li { padding: 8px 0; border-bottom: 1px solid var(--border-color); color: var(--text-gray); font-size: 0.95rem; display: flex; align-items: center; gap: 8px; }
+        .dept-list li:last-child { border-bottom: none; }
+        .dept-list li::before { content: '✓'; color: var(--success); font-weight: bold; }
+
+        /* Why Choose */
+        .why-choose { background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); padding: 60px 20px; color: white; }
+        .why-choose .section-title h2 { color: white; }
+        .why-choose .section-title h2::after { background: var(--gold); }
+        .why-choose .section-title p { color: rgba(255,255,255,0.9); }
+        .why-grid { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 25px; }
+        .why-item { background: rgba(255,255,255,0.1); backdrop-filter: blur(5px); padding: 25px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.2); }
+        .why-item h3 { font-size: 1.1rem; margin-bottom: 8px; color: var(--gold); }
+        .why-item p { line-height: 1.5; font-size: 0.9rem; opacity: 0.9; }
+
+        /* How It Works */
+        .how-it-works { padding: 60px 20px; max-width: 1200px; margin: 0 auto; }
+        .steps { display: flex; justify-content: space-around; flex-wrap: wrap; gap: 30px; margin-top: 40px; }
+        .step { flex: 1; min-width: 200px; max-width: 250px; text-align: center; }
+        .step-number { width: 50px; height: 50px; background: var(--primary); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: bold; margin: 0 auto 15px; }
+        .step h3 { font-size: 1.1rem; margin-bottom: 8px; color: var(--dark); }
+        .step p { color: var(--text-gray); font-size: 0.9rem; }
+
+        /* CTA */
+        .cta-section { background: var(--dark); padding: 60px 20px; text-align: center; color: white; }
+        .cta-section h2 { font-size: 2rem; margin-bottom: 15px; }
+        .cta-section p { font-size: 1.1rem; margin-bottom: 25px; color: rgba(255,255,255,0.8); }
+        .cta-buttons { display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; }
+        .btn { padding: 12px 30px; border-radius: 25px; text-decoration: none; font-weight: 600; font-size: 1rem; transition: all 0.3s; display: inline-flex; align-items: center; gap: 8px; cursor: pointer; border: none; }
+        .btn-primary { background: var(--gold); color: #744210; }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(236, 201, 75, 0.3); }
+        .btn-secondary { background: transparent; border: 2px solid white; color: white; }
+        .btn-secondary:hover { background: white; color: var(--dark); }
+
+        /* Footer */
+        .footer { background: #111; color: white; padding: 30px 20px; text-align: center; }
+        .footer p { color: rgba(255,255,255,0.6); margin-top: 5px; font-size: 0.9rem; }
+
+        /* ============ REGISTRATION WIZARD ============ */
+        .wizard-container { max-width: 650px; margin: 40px auto; background: white; border-radius: 20px; padding: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+        .wizard-header { text-align: center; margin-bottom: 25px; }
+        .wizard-header h2 { color: var(--primary); font-size: 1.6rem; }
+        
+        .progress-bar { display: flex; justify-content: space-between; margin-bottom: 30px; position: relative; }
+        .progress-bar::before { content: ''; position: absolute; top: 12px; left: 0; right: 0; height: 3px; background: var(--border-color); z-index: 1; }
+        .progress-step { width: 28px; height: 28px; background: var(--border-color); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; color: white; z-index: 2; transition: 0.3s; font-size: 0.8rem; }
+        .progress-step.active { background: var(--primary); transform: scale(1.1); }
+        .progress-step.completed { background: var(--success); }
+
+        .step-content { display: none; animation: fadeIn 0.4s ease; }
+        .step-content.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 6px; font-weight: 600; color: var(--dark); font-size: 0.9rem; }
+        .form-group input, .form-group select { width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 0.95rem; background: var(--light); color: var(--dark); }
+        .form-group input:focus, .form-group select:focus { border-color: var(--primary); outline: none; }
+
+        /* Subject Selection Checkboxes */
+        .subject-checkboxes {
+            max-height: 400px;
+            overflow-y: auto;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 15px;
+            background: var(--light);
+        }
+        .subject-checkbox {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            margin-bottom: 8px;
+            background: white;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .subject-checkbox:hover {
+            background: rgba(102, 126, 234, 0.05);
+        }
+        .subject-checkbox input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            margin-right: 12px;
+            cursor: pointer;
+        }
+        .subject-checkbox label {
+            cursor: pointer;
+            flex: 1;
+            margin: 0;
+            font-weight: 500;
+        }
+        .subject-count {
+            text-align: center;
+            padding: 10px;
+            background: var(--primary);
+            color: white;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+        .subject-count.warning {
+            background: var(--danger);
+        }
+
+        .wizard-btns { display: flex; gap: 10px; margin-top: 25px; }
+        .btn-prev, .btn-next { flex: 1; padding: 12px; border: none; border-radius: 8px; font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: 0.2s; }
+        .btn-prev { background: var(--light); color: var(--text-gray); }
+        .btn-prev:hover { background: var(--border-color); }
+        .btn-next { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; }
+        .btn-next:hover { transform: translateY(-1px); box-shadow: 0 4px 10px rgba(102, 126, 234, 0.3); }
+        .btn-next:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+        .summary-box { background: var(--light); padding: 15px; border-radius: 10px; border-left: 4px solid var(--primary); margin-bottom: 15px; }
+        .summary-box p { margin-bottom: 8px; font-size: 0.95rem; }
+        .summary-box strong { color: var(--primary); }
+        .summary-box ul { margin-left: 20px; margin-top: 8px; }
+        .summary-box li { margin-bottom: 4px; }
+        
+        .price-tag { text-align: center; margin: 15px 0; font-size: 1.8rem; font-weight: 800; color: var(--success); }
+
+        .id-display-box { background: #f0f4f8; border: 2px dashed var(--primary); border-radius: 10px; padding: 15px; margin: 15px 0; text-align: center; }
+        .id-text { font-size: 1.5rem; font-weight: 800; color: var(--primary); letter-spacing: 1px; margin: 10px 0; word-break: break-all; }
+        .copy-btn { background: var(--primary); color: white; border: none; padding: 6px 15px; border-radius: 15px; cursor: pointer; font-weight: 600; font-size: 0.85rem; }
+        
+        .warning-box { background: #fff5f5; border: 1px solid #feb2b2; border-left: 4px solid var(--danger); color: #c53030; padding: 15px; border-radius: 6px; text-align: left; font-size: 0.85rem; margin-bottom: 15px; }
+        .warning-box strong { display: block; margin-bottom: 8px; font-size: 0.95rem; }
+        .warning-box ul { margin-left: 20px; margin-top: 8px; }
+        .warning-box li { margin-bottom: 5px; }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .school-name h1 { font-size: 1.1rem; }
+            .school-name p { display: none; }
+            .slide-content h2 { font-size: 1.8rem; }
+            .hero-slider { height: 450px; }
+            .section-title h2 { font-size: 1.6rem; }
+            .wizard-container { margin: 20px; padding: 20px; }
+            .telegram-grid-container { flex-direction: column; gap: 10px; padding: 0 10px; }
+            .tg-action-btn { width: 100%; justify-content: center; }
+        }
+    </style>
+</head>
+<body>
+    <!-- ============ HEADER ============ -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo-container">
+                <img src="logo.png" alt="Logo" class="logo" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎓</text></svg>'">
+                <div class="school-name">
+                    <h1>Scholars Breeding</h1>
+                    <p>WAEC, NECO, GCE & JAMB Prep</p>
+                </div>
+            </div>
+            <button class="nav-btn" onclick="showLogin()">Student Login</button>
+        </div>
+    </header>
+
+    <!-- ============ LANDING PAGE ============ -->
+    <div id="landing-page">
+        
+        <!-- Hero Slider with CTA Button -->
+        <section class="hero-slider">
+            <div class="slide active" style="background-image: url('logo1.png')">
+                <div class="slide-content">
+                    <h2>📚 Ace Your WAEC & NECO Exams</h2>
+                    <p>Join thousands of successful students globally who have transformed their careers through our world-class online exam preparation platform.</p>
+                    <button class="hero-btn-large" onclick="startRegistration()">🚀 Get ID Now</button>
+                </div>
+            </div>
+            <div class="slide" style="background-image: url('logo2.png')">
+                <div class="slide-content">
+                    <h2>🎯 Master JAMB & GCE with Smart Practice</h2>
+                    <p>Practice with thousands of questions, track your progress, and achieve outstanding results in your exams.</p>
+                    <button class="hero-btn-large" onclick="startRegistration()">🚀 Get Started Now</button>
+                </div>
+            </div>
+            <div class="slide" style="background-image: url('logo4.png')">
+                <div class="slide-content">
+                    <h2>👥 Collaborative Learning</h2>
+                    <p>Connect with fellow students, share knowledge, and grow together in our vibrant academic community.</p>
+                    <button class="hero-btn-large" onclick="startRegistration()">🚀 Register ID Now</button>
+                </div>
+            </div>
+            <div class="slide" style="background-image: url('logo5.png')">
+                <div class="slide-content">
+                    <h2>💻 Learn Anywhere, Anytime</h2>
+                    <p>Flexible learning that fits your schedule. Study at your own pace from the comfort of your home.</p>
+                    <button class="hero-btn-large" onclick="startRegistration()">🚀 Get Started Now</button>
+                </div>
+            </div>
+            <div class="slider-dots">
+                <span class="dot active" onclick="goToSlide(0)"></span>
+                <span class="dot" onclick="goToSlide(1)"></span>
+                <span class="dot" onclick="goToSlide(2)"></span>
+                <span class="dot" onclick="goToSlide(3)"></span>
+            </div>
+        </section>
+
+        <!-- ✅ TELEGRAM COMMUNITY LINKS RIGHT UNDER HERO -->
+        <section class="telegram-hero-banner">
+            <div class="telegram-grid-container">
+                <a href="https://t.me/Scholarsbreedchannel" target="_blank" class="tg-action-btn tg-channel-theme">📢 Join Our Updates Channel</a>
+                <a href="https://t.me/Scholarsbreedingchat" target="_blank" class="tg-action-btn tg-chat-theme">💬 Join Our Discussion Group Chat</a>
+            </div>
+        </section>
+
+        <!-- Subject Categories Section -->
+        <section class="curriculum-section">
+            <div class="section-title">
+                <h2>Available Subjects</h2>
+                <p>We provide comprehensive exam preparation for WAEC, NECO, GCE, and JAMB across all major subjects.</p>
+            </div>
+            <div class="dept-grid">
+                <div class="dept-card">
+                    <h3>🔬 Science Subjects</h3>
+                    <ul class="dept-list">
+                        <li>Physics</li>
+                        <li>Chemistry</li>
+                        <li>Biology</li>
+                        <li>Mathematics</li>
+                        <li>Further Mathematics</li>
+                        <li>Agricultural Science</li>
+                    </ul>
+                </div>
+                <div class="dept-card">
+                    <h3>💼 Commercial Subjects</h3>
+                    <ul class="dept-list">
+                        <li>Economics</li>
+                        <li>Accounting</li>
+                        <li>Commerce</li>
+                        <li>Business Management</li>
+                        <li>Office Practice</li>
+                    </ul>
+                </div>
+                <div class="dept-card">
+                    <h3>🎨 Arts & Humanities</h3>
+                    <ul class="dept-list">
+                        <li>Government</li>
+                        <li>Literature-in-English</li>
+                        <li>CRS / IRS</li>
+                        <li>History</li>
+                        <li>Geography</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features -->
+        <section class="features">
+            <div class="section-title">
+                <h2>Why Choose Scholars Breeding?</h2>
+                <p>Discover the features that make learning with us an exceptional experience.</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card"><div class="feature-icon">📖</div><h3>Comprehensive Materials</h3><p>Access extensive course materials and practice questions tailored to your curriculum.</p></div>
+                <div class="feature-card"><div class="feature-icon">📊</div><h3>Progress Tracking</h3><p>Monitor your performance with detailed analytics and identify areas for improvement.</p></div>
+                <div class="feature-card"><div class="feature-icon">⏱️</div><h3>Timed Practice Exams</h3><p>Simulate real exam conditions with our timed practice tests to build confidence.</p></div>
+                <div class="feature-card"><div class="feature-icon">🎓</div><h3>Expert Guidance</h3><p>Learn from experienced educators and benefit from years of academic expertise.</p></div>
+                <div class="feature-card"><div class="feature-icon">📱</div><h3>Mobile Friendly</h3><p>Study on the go with our responsive platform that works seamlessly on all devices.</p></div>
+                <div class="feature-card"><div class="feature-icon">🔒</div><h3>Secure & Reliable</h3><p>Your data is protected with enterprise-level security and 99.9% uptime guarantee.</p></div>
+            </div>
+        </section>
+
+        <!-- Why Choose -->
+        <section class="why-choose">
+            <div class="section-title">
+                <h2>Why Scholars Breeding Matters</h2>
+                <p>Understanding the importance of quality exam preparation for WAEC, NECO, GCE, and JAMB.</p>
+            </div>
+            <div class="why-grid">
+                <div class="why-item"><h3>🎯 Academic Excellence</h3><p>Our platform ensures you receive the highest quality education, maintaining prestigious academic standards.</p></div>
+                <div class="why-item"><h3>⚡ Flexibility</h3><p>Balance work, family, and education with our flexible learning schedule designed for professionals.</p></div>
+                <div class="why-item"><h3>🌍 Accessibility</h3><p>Quality education is now accessible to everyone, regardless of location or circumstances.</p></div>            
+                <div class="why-item"><h3>📈 Career Advancement</h3><p>Enhance your qualifications and open doors to better career opportunities without interrupting your job.</p></div>
+            </div>
+        </section>
+
+        <!-- How It Works -->
+        <section class="how-it-works">
+            <div class="section-title">
+                <h2>How to Get Started</h2>
+                <p>Getting access to your portal is simple, secure, and instantaneous.</p>
+            </div>
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h3>Select Exam & Subjects</h3>
+                    <p>Choose your exam type (WAEC/NECO/GCE/JAMB) and select up to 10 subjects.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <h3>Secure Payment</h3>
+                    <p>Pay a one-time access fee securely via Paystack to unlock your portal.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <h3>Get Your Access ID</h3>
+                    <p>Receive your unique login credentials instantly on-screen and via email.</p>
+                </div>                <div class="step">
+                    <div class="step-number">4</div>
+                    <h3>Start Practicing</h3>
+                    <p>Login to your portal, select Foundation, Standard, or Exam Mode, and start practicing.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA -->
+        <section class="cta-section">
+            <h2>Ready to Start Your Learning Journey?</h2>
+            <p>Join the Scholars Breeding community today and take the first step towards academic excellence.</p>
+            <div class="cta-buttons">
+                <button class="btn btn-primary" onclick="startRegistration()">🚀 Get Started Now</button>
+                <a href="dashboard.html" class="btn btn-secondary">🔐 Student Login</a>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <h3>Scholars Breeding</h3>
+            <p>WAEC, NECO, GCE & JAMB Prep Platform</p>
+            <p>Made with passion for academic excellence</p>
+            <p style="margin-top: 15px; font-size: 0.85rem;">© 2026 All Rights Reserved</p>
+        </footer>
+    </div>
+
+    <!-- ============ REGISTRATION WIZARD ============ -->
+    <div id="registration-wizard" class="hidden">
+        <div class="wizard-container">
+            <div class="wizard-header">
+                <h2>🎓 Register Your Access</h2>
+                <p style="color: var(--text-gray); margin-top:5px;">Select your exam and subjects to proceed to payment.</p>
+            </div>
+
+            <div class="progress-bar">
+                <div class="progress-step active" id="step-ind-1">1</div>
+                <div class="progress-step" id="step-ind-2">2</div>
+                <div class="progress-step" id="step-ind-3">3</div>
+            </div>
+
+            <!-- Step 1: Exam Type -->
+            <div class="step-content active" id="step-1">
+                <div class="form-group">
+                    <label>🏛️ Step 1: Choose Your Exam Type</label>
+                    <select id="select-exam" onchange="updateExamSelection()">
+                        <option value="">-- Select Exam Type --</option>
+                        <option value="WAEC/NECO/GCE/JAMB">WAEC/NECO/GCE/JAMB (Combined)</option>
+                    </select>
+                </div>                <div class="wizard-btns">
+                    <button class="btn-prev" onclick="backToLanding()">← Back</button>
+                    <button class="btn-next" id="btn-next-1" onclick="nextStep(2)" disabled>Next Step →</button>                
+                </div>
+            </div>
+
+            <!-- Step 2: Subject Selection -->
+            <div class="step-content" id="step-2">                
+                <div class="form-group">
+                    <label>📖 Step 2: Select Your Subjects (Maximum 10)</label>
+                    <div class="subject-count" id="subject-count">0 out of 10 subjects selected</div>
+                    <div class="subject-checkboxes" id="subject-checkboxes">
+                        <p style="text-align: center; padding: 20px; color: var(--text-gray);">Loading subjects...</p>
+                    </div>
+                </div>
+                <div class="wizard-btns">
+                    <button class="btn-prev" onclick="prevStep(1)">← Previous</button>
+                    <button class="btn-next" id="btn-next-2" onclick="showSummary()" disabled>Review & Pay →</button>
+                </div>
+            </div>
+
+            <!-- Step 3: Summary -->
+            <div class="step-content" id="step-3">
+                <div class="summary-box">
+                    <p><strong>Exam Type:</strong> <span id="sum-exam"></span></p>
+                    <p><strong>Selected Subjects:</strong></p>
+                    <ul id="sum-subjects"></ul>
+                </div>
+                <div class="price-tag">₦1,000</div>
+                <div class="form-group" style="margin-top: 20px;">                    
+                    <label>👤 Full Name (For Receipt)</label>
+                    <input type="text" id="input-name" placeholder="Enter your full name">
+                </div>
+                <div class="form-group">
+                    <label>📧 Email Address (For Receipt & Login)</label>
+                    <input type="email" id="input-email" placeholder="Enter your email">
+                </div>
+                <div class="wizard-btns">
+                    <button class="btn-prev" onclick="prevStep(2)">← Edit</button>
+                    <button class="btn-next" style="background: linear-gradient(135deg, #11998e, #38ef7d);" onclick="proceedToPayment()">💳 Pay ₦1,000 Now</button>
+                </div>
+            </div>
+
+            <!-- Step 4: Success -->
+            <div class="step-content" id="step-4">
+                <div style="text-align: center;">
+                    <div style="font-size: 3rem; margin-bottom: 10px;">🎉</div>
+                    <h2 style="color: var(--success); margin-bottom: 10px;">Payment Successful!</h2>
+                    <p style="color: var(--text-gray); margin-bottom: 20px;">Your access has been activated. Below is your unique Login ID.</p>
+                    <div class="id-display-box">                        <label>Your Access ID:</label>
+                        <div class="id-text" id="generated-id">LOADING...</div>
+                        <button class="copy-btn" onclick="copyId()">📋 Copy ID</button>
+                    </div>
+                    
+                    <div class="warning-box">
+                        <strong>⚠️ IMPORTANT WARNINGS - PLEASE READ CAREFULLY:</strong>
+                        <ul>
+                            <li><strong>Device Sharing Tracking Limit:</strong> This unique Access ID tracks your individual device hardware signatures. It can be initialized on a <strong>maximum limit of 5 different devices</strong>. Saving or distribution across more than 5 separate phones/browsers triggers an automatic, permanent account ban.</li>
+                            <li><strong>Concurrent User Monitoring:</strong> Multiple parallel sessions across active locations will match against system tracking tags and instantly freeze study progress logs.</li>
+                            <li><strong>1-Year Validity:</strong> Your access expires exactly 1 year from today. After expiration, you will need to renew your active subscription.</li>
+                            <li><strong>Never Share:</strong> Keep your records secure. Your internal personal exam scores and progress analytical trends are securely mapped exclusively to this single generation token.</li>
+                        </ul>
+                        
+                        <!-- ✅ EMBEDDED TELEGRAM BUTTON INSIDE SUCCESS PANEL -->
+                        <div style="margin-top: 20px; text-align: center;">
+                            <p style="color: var(--dark); font-weight: 600; margin-bottom: 10px; font-size: 0.9rem;">Join your batchmates right away:</p>
+                            <a href="https://t.me/Scholarsbreedingchat" target="_blank" class="tg-action-btn tg-chat-theme" style="width: 100%; justify-content: center;">💬 Connect with Students Support Chat Group</a>
+                        </div>
+                    </div>
+                    <button class="btn-next" style="margin-top: 20px; width: 100%;" onclick="goToLogin()">🔐 Proceed to Login</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ==========================================
+        // 🎬 SLIDER LOGIC
+        // ==========================================
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const dots = document.querySelectorAll('.dot');
+        const totalSlides = slides.length;
+
+        function showSlide(index) {
+            slides.forEach((slide, i) => {
+                slide.classList.remove('active');
+                dots[i].classList.remove('active');
+                if (i === index) { slide.classList.add('active'); dots[i].classList.add('active'); }
+            });
+        }
+        function nextSlide() { currentSlide = (currentSlide + 1) % totalSlides; showSlide(currentSlide); }
+        function goToSlide(index) { currentSlide = index; showSlide(currentSlide); }
+        setInterval(nextSlide, 5000);
+
+        // Scroll Animations
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) { entry.target.style.opacity = '1'; entry.target.style.transform = 'translateY(0)'; }
+            });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.feature-card, .step, .why-item, .dept-card').forEach(el => {
+            el.style.opacity = '0'; el.style.transform = 'translateY(20px)'; el.style.transition = 'all 0.6s ease';
+            observer.observe(el);
+        });
+
+        // ==========================================
+        // 🔒 SMART CLIENT DEVICE FINGERPRINT SEED
+        // ==========================================
+        function getOrCreateDeviceToken() {
+            let token = localStorage.getItem('sb_device_token');
+            if (!token) {
+                // Generate secure random browser hardware signature mockup string
+                token = 'DEV-' + Math.random().toString(36).substring(2, 15) + Date.now().toString(36);
+                localStorage.setItem('sb_device_token', token);
+            }
+            return token;
+        }
+
+        // ==========================================
+        // 💳 WIZARD & PAYSTACK LOGIC
+        // ==========================================
+        const PAYSTACK_PUBLIC_KEY = 'pk_live_d265096a47801eaa597f27f6674e5a6d051e4959'; 
+        let selectedExamName = '';
+        let selectedSubjects = [];
+        let allSubjects = [];
+        let userFullName = '', userEmail = '';
+        const MAX_SUBJECTS = 10;
+
+        function updateExamSelection() {
+            const val = document.getElementById('select-exam').value;
+            document.getElementById('btn-next-1').disabled = !val;
+            if(val) selectedExamName = val;
+        }
+
+        async function loadSubjects() {
+            const container = document.getElementById('subject-checkboxes');
+            try {
+                const snap = await window.firestoreFns.getDocs(window.firestoreFns.collection(window.db, "subjects"));
+                allSubjects = [];
+                snap.forEach(doc => {
+                    allSubjects.push({ id: doc.id, ...doc.data() });
+                });
+                
+                if (allSubjects.length === 0) {
+                    container.innerHTML = '<p style="text-align: center; padding: 20px; color: var(--danger);">No subjects available yet. Please check back later.</p>';
+                    return;
+                }
+
+                renderSubjectCheckboxes();
+            } catch (e) {
+                console.error(e);
+                container.innerHTML = '<p style="text-align: center; padding: 20px; color: var(--danger);">Error loading subjects. Please refresh.</p>';
+            }
+        }
+
+        function renderSubjectCheckboxes() {
+            const container = document.getElementById('subject-checkboxes');
+            container.innerHTML = allSubjects.map(subj => `
+                <div class="subject-checkbox">
+                    <input type="checkbox" id="subj-${subj.id}" value="${subj.id}" data-name="${subj.name}" onchange="updateSubjectSelection()">
+                    <label for="subj-${subj.id}">${subj.name}</label>
+                </div>
+            `).join('');
+        }
+
+        function updateSubjectSelection() {
+            const checkboxes = document.querySelectorAll('#subject-checkboxes input[type="checkbox"]:checked');
+            selectedSubjects = Array.from(checkboxes).map(cb => ({
+                id: cb.value,
+                name: cb.getAttribute('data-name')
+            }));
+
+            const countDisplay = document.getElementById('subject-count');
+            const nextBtn = document.getElementById('btn-next-2');
+            
+            countDisplay.textContent = `${selectedSubjects.length} out of ${MAX_SUBJECTS} subjects selected`;
+            
+            if (selectedSubjects.length > MAX_SUBJECTS) {
+                countDisplay.classList.add('warning');
+                countDisplay.textContent = `⚠️ Maximum ${MAX_SUBJECTS} subjects allowed! Please deselect some.`;
+                nextBtn.disabled = true;
+            } else {
+                countDisplay.classList.remove('warning');
+                nextBtn.disabled = selectedSubjects.length === 0;
+            }
+        }
+
+        function generateAccessId(examName) {
+            const examCode = "SCH"; 
+            const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+            let random = '';
+            for (let i = 0; i < 8; i++) random += chars.charAt(Math.floor(Math.random() * chars.length));
+            return `${examCode}-${random}`;
+        }
+
+        function showLogin() { window.location.href = 'dashboard.html'; }
+
+        function startRegistration() {
+            document.getElementById('landing-page').classList.add('hidden');
+            document.getElementById('registration-wizard').classList.remove('hidden');
+            window.scrollTo(0, 0);
+            loadSubjects();
+        }
+
+        function backToLanding() {
+            document.getElementById('registration-wizard').classList.add('hidden');
+            document.getElementById('landing-page').classList.remove('hidden');
+            resetWizard();
+        }
+
+        function resetWizard() {            
+            document.getElementById('select-exam').value = "";
+            selectedSubjects = [];
+            document.getElementById('input-name').value = ""; 
+            document.getElementById('input-email').value = "";
+            goToStep(1);
+        }
+        function goToStep(step) {
+            for (let i = 1; i <= 4; i++) {
+                const stepEl = document.getElementById(`step-${i}`);
+                const indEl = document.getElementById(`step-ind-${i}`);
+                if(stepEl) stepEl.classList.remove('active');
+                if(indEl) indEl.classList.remove('active', 'completed');
+            }
+            document.getElementById(`step-${step}`).classList.add('active');
+            for (let i = 1; i < step; i++) {
+                const indEl = document.getElementById(`step-ind-${i}`);
+                if(indEl) indEl.classList.add('completed');
+            }
+            if(step <= 3) {
+                const indEl = document.getElementById(`step-ind-${step}`);
+                if(indEl) indEl.classList.add('active');
+            }
+        }
+
+        function nextStep(step) { goToStep(step); window.scrollTo(0, 200); }
+        function prevStep(step) { goToStep(step); window.scrollTo(0, 200); }
+
+        function showSummary() {
+            document.getElementById('sum-exam').textContent = selectedExamName;
+            const subjectsList = document.getElementById('sum-subjects');
+            subjectsList.innerHTML = selectedSubjects.map(s => `<li>${s.name}</li>`).join('');
+            goToStep(3); window.scrollTo(0, 200);
+        }
+
+        function validateEmail(email) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email); }
+
+        function proceedToPayment() {
+            userFullName = document.getElementById('input-name').value.trim();
+            userEmail = document.getElementById('input-email').value.trim();
+            if (!userFullName || !userEmail) return alert("⚠️ Please enter your full name and email.");
+            if (!validateEmail(userEmail)) return alert("⚠️ Please enter a valid email address.");
+   
+            const handler = PaystackPop.setup({
+                key: PAYSTACK_PUBLIC_KEY, email: userEmail, amount: 100000, currency: 'NGN',
+                ref: 'SB_' + Date.now() + '_' + Math.floor(Math.random() * 1000),
+                metadata: { custom_fields: [
+                    { display_name: "Full Name", variable_name: "full_name", value: userFullName },
+                    { display_name: "Exam Type", variable_name: "exam_type", value: selectedExamName },
+                    { display_name: "Subjects", variable_name: "subjects", value: selectedSubjects.map(s => s.name).join(', ') }
+                ]},
+                callback: function(response) { handlePaymentSuccess(response.reference); },
+                onClose: function() {}
+            });
+            handler.openIframe();
+        }
+        async function handlePaymentSuccess(paystackRef) {
+            const accessId = generateAccessId(selectedExamName);
+            const expirationDate = new Date();
+            expirationDate.setFullYear(expirationDate.getFullYear() + 1);
+            
+            // Generate or fetch token for the registering device
+            const setupDeviceToken = getOrCreateDeviceToken();
+            
+            try {
+                await window.firestoreFns.addDoc(window.firestoreFns.collection(window.db, "registrations"), {
+                    accessId, 
+                    fullName: userFullName, 
+                    email: userEmail,
+                    examType: selectedExamName, 
+                    subjects: selectedSubjects,
+                    subjectIds: selectedSubjects.map(s => s.id),
+                    amountPaid: 1000, 
+                    paystackReference: paystackRef, 
+                    status: "active", 
+                    createdAt: new Date(),
+                    expirationDate: expirationDate,
+                    // ✅ Array mapping to limit usage to 5 devices dynamically during login
+                    allowedDevices: [setupDeviceToken], 
+                    lastLoginAt: null
+                });
+                document.getElementById('generated-id').textContent = accessId;
+                goToStep(4); window.scrollTo(0, 200);
+            } catch (e) {
+                console.error(e);
+                alert("✅ Payment successful! But network issue saving ID. Contact support with Ref: " + paystackRef);
+            }
+        }
+
+        function copyId() {
+            const idText = document.getElementById('generated-id').textContent;
+            navigator.clipboard.writeText(idText).then(() => alert("✅ Access ID copied!")).catch(() => {                
+                const textArea = document.createElement("textarea"); textArea.value = idText;
+                document.body.appendChild(textArea); textArea.select(); document.execCommand("copy");
+                document.body.removeChild(textArea); alert("✅ Access ID copied!");
+            });
+        }
+        
+        function goToLogin() { window.location.href = 'dashboard.html'; }
+    </script>
+</body>
+</html>
