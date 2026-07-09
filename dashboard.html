@@ -575,6 +575,25 @@
             #countdown-overlay { font-size: 8rem; }
             .history-table th, .history-table td { padding: 10px; font-size: 0.8rem; }
         }
+
+        .calc-toggle-btn-large {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            border: none;
+            padding: 16px 45px;
+            border-radius: 30px;
+            color: white;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 6px 20px rgba(17, 153, 142, 0.4);
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            margin: 25px auto;
+            width: auto;
+        }
+        .calc-toggle-btn-large:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(17, 153, 142, 0.6); }
     </style>
 </head>
 <body>
@@ -738,6 +757,12 @@
                 </div>
             </div>
 
+            <div style="text-align: center; margin: 15px 0;">
+                <button class="calc-toggle-btn-large" onclick="openCalculator()">
+                    <span style="font-size: 1.5rem;">📊</span> Calculator
+                </button>
+            </div>
+
             <div class="question-box">
                 <div class="question-text" id="q-text">Loading question...</div>
                 <img id="q-image" class="question-image" style="display: none;" alt="Question Image">
@@ -820,7 +845,6 @@
         const positiveMessages = ["Wow!", "Amazing!", "Nice one!", "Good job!", "Excellent!", "Perfect!", "Correct!", "Fantastic!"];
         const negativeMessages = ["Oh sorry!", "Try again!", "Not quite!", "Incorrect!", "Wrong answer!", "Keep trying!"];
 
-        // Initialize Audio context safely
         let audioCtx = null;
         function playTone(freq, duration) {
             try {
@@ -982,6 +1006,7 @@
         function studentLogout() {
             if (!confirm('Are you sure you want to logout?')) return;
             currentUser = null;
+            localStorage.removeItem('scholars_user_session');
             document.getElementById('access-id-input').value = '';
             showSection('login-section');
         }
@@ -1122,24 +1147,8 @@
                 userAnswers = {};
                 examStartTime = Date.now();
 
-                if (currentMode === 'beginner') {
-                    timePerQuestion = 0;
-                    totalTime = 9000; 
-                } else if (currentMode === 'advanced') {
-                    timePerQuestion = 45;
-                    totalTime = currentQuestions.length * 45;
-                } else { 
-                    timePerQuestion = 30;
-                    totalTime = currentQuestions.length * 30;
-                }
-
-                timeLeft = timePerQuestion > 0 ? timePerQuestion : totalTime;
-
-                document.getElementById('subject-badge').textContent = currentSubject.name;
-                document.getElementById('mode-badge').textContent = `${selectedCategoryMode.toUpperCase()} (${currentMode.toUpperCase()})`;
-
-                showSection('exam-section');
-                updateTimerDisplay();
+                setupTimeParameters();
+                initExamDOM();
 
                 runCountdown(() => {
                     startTimer();
@@ -1150,6 +1159,27 @@
                 console.error('Error starting exam:', e);
                 alert('❌ Failed to load questions: ' + e.message);
             }
+        }
+
+        function setupTimeParameters() {
+            if (currentMode === 'beginner') {
+                timePerQuestion = 0;
+                totalTime = 9000; 
+            } else if (currentMode === 'advanced') {
+                timePerQuestion = 45;
+                totalTime = currentQuestions.length * 45;
+            } else { 
+                timePerQuestion = 30;
+                totalTime = currentQuestions.length * 30;
+            }
+            timeLeft = timePerQuestion > 0 ? timePerQuestion : totalTime;
+        }
+
+        function initExamDOM() {
+            document.getElementById('subject-badge').textContent = currentSubject.name;
+            document.getElementById('mode-badge').textContent = `${selectedCategoryMode.toUpperCase()} (${currentMode.toUpperCase()})`;
+            showSection('exam-section');
+            updateTimerDisplay();
         }
 
         function runCountdown(callback) {
@@ -1481,6 +1511,7 @@
 
         function confirmQuitExam() {
             if (confirm("🚪 Are you sure you want to terminate this exam process? Progress won't be saved.")) {
+                localStorage.removeItem('hgdl_examState');
                 showSection('dashboard-section');
                 loadDashboard();
             }
@@ -1492,6 +1523,7 @@
             clearInterval(timerInterval);
             if (nextQuestionTimeout) clearTimeout(nextQuestionTimeout);
             window.speechSynthesis?.cancel();
+            localStorage.removeItem('hgdl_examState');
 
             const durationSecNode = Math.floor((Date.now() - examStartTime) / 1000);
             const displayMin = Math.floor(durationSecNode / 60).toString().padStart(2, '0');
@@ -1547,6 +1579,92 @@
                 console.error("Error logging exam outcome:", e);
             }
         }
+
+        function openCalculator() {
+            const examState = {
+                currentUser: currentUser,
+                currentQuestionIndex: currentQuestionIndex,
+                currentSubject: currentSubject,
+                selectedCategoryMode: selectedCategoryMode,
+                currentMode: currentMode,
+                score: score,
+                userAnswers: userAnswers,
+                timeLeft: timeLeft,
+                totalTime: totalTime,
+                timePerQuestion: timePerQuestion,
+                examStartTime: examStartTime,
+                currentQuestions: currentQuestions,
+                isExamActive: true
+            };
+            localStorage.setItem('hgdl_examState', JSON.stringify(examState));
+            localStorage.setItem('scholars_user_session', JSON.stringify(currentUser));
+            window.location.href = 'calculator.html';
+        }
+
+        function restoreExamState() {
+            const savedState = localStorage.getItem('hgdl_examState');
+            if (savedState) {
+                try {
+                    const state = JSON.parse(savedState);
+                    if (state.isExamActive) {
+                        currentUser = state.currentUser;
+                        currentQuestionIndex = state.currentQuestionIndex;
+                        currentSubject = state.currentSubject;
+                        selectedCategoryMode = state.selectedCategoryMode || 'standard';
+                        currentMode = state.currentMode;
+                        score = state.score;
+                        userAnswers = state.userAnswers || {};
+                        timeLeft = state.timeLeft;
+                        totalTime = state.totalTime;
+                        timePerQuestion = state.timePerQuestion || 0;
+                        examStartTime = state.examStartTime;
+                        currentQuestions = state.currentQuestions;
+
+                        document.getElementById('user-name').textContent = currentUser.fullName || "Student";
+                        document.getElementById('user-exam-info').textContent = currentUser.examType || "";
+                        document.getElementById('user-access-id').textContent = currentUser.accessId || "";
+                        
+                        document.getElementById('subject-badge').textContent = currentSubject.name;
+                        document.getElementById('mode-badge').textContent = `${selectedCategoryMode.toUpperCase()} (${currentMode.toUpperCase()})`;
+
+                        showSection('exam-section');
+                        loadQuestion(currentQuestionIndex);
+                        startTimer();
+
+                        localStorage.removeItem('hgdl_examState');
+                        return true;
+                    }
+                } catch (e) {
+                    console.error('Error restoring state context:', e);
+                }
+            }
+            return false;
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            const wasRestored = restoreExamState();
+            if (!wasRestored) {
+                const activeSession = localStorage.getItem('scholars_user_session');
+                if (activeSession) {
+                    try {
+                        currentUser = JSON.parse(activeSession);
+                        document.getElementById('user-name').textContent = currentUser.fullName || "Student";
+                        document.getElementById('user-exam-info').textContent = currentUser.examType || "";
+                        document.getElementById('user-access-id').textContent = currentUser.accessId || "";
+                        showSection('dashboard-section');
+                        
+                        let checkFirebaseFns = setInterval(() => {
+                            if (window.db && window.firestoreFns) {
+                                clearInterval(checkFirebaseFns);
+                                loadDashboard();
+                            }
+                        }, 200);
+                    } catch(e) {
+                        localStorage.removeItem('scholars_user_session');
+                    }
+                }
+            }
+        });
     </script>
 </body>
 </html>
