@@ -1,4 +1,4 @@
-  <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -652,7 +652,7 @@
         function getOrCreateDeviceToken() {
             let token = localStorage.getItem('sb_device_token');
             if (!token) {
-                // Generate secure random browser hardware signature mockup string
+                // Securely track distinct browsers/hardware profiles cleanly
                 token = 'DEV-' + Math.random().toString(36).substring(2, 15) + Date.now().toString(36);
                 localStorage.setItem('sb_device_token', token);
             }
@@ -812,7 +812,6 @@
             const expirationDate = new Date();
             expirationDate.setFullYear(expirationDate.getFullYear() + 1);
             
-            // Generate or fetch token for the registering device
             const setupDeviceToken = getOrCreateDeviceToken();
             
             try {
@@ -828,8 +827,7 @@
                     status: "active", 
                     createdAt: new Date(),
                     expirationDate: expirationDate,
-                    // ✅ Array mapping to limit usage to 5 devices dynamically during login
-                    allowedDevices: [setupDeviceToken], 
+                    allowedDevices: [setupDeviceToken], // Dynamically saves first token
                     lastLoginAt: null
                 });
                 document.getElementById('generated-id').textContent = accessId;

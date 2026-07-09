@@ -47,7 +47,8 @@
             --dark: #f7fafc;
             --text-primary: #f7fafc;
             --text-secondary: #e2e8f0;
-            --border-color: #4a5568;            --card-bg: #2d3748;
+            --border-color: #4a5568;            
+            --card-bg: #2d3748;
             --input-bg: #1a202c;
         }
 
@@ -70,7 +71,6 @@
             color: var(--text-primary);
         }
 
-        /* ============ HEADER WITH LOGO ============ */
         .main-header {
             text-align: center;
             padding: 20px 0 30px;
@@ -78,9 +78,7 @@
             margin-bottom: 30px;
         }
 
-        .logo-section {
-            margin-bottom: 20px;
-        }
+        .logo-section { margin-bottom: 20px; }
 
         .school-logo {
             width: 100px;
@@ -96,7 +94,7 @@
         }
 
         .school-name {
-            font-size: 1.8rem;            font-weight: 800;
+            font-size: 1.8rem; font-weight: 800;
             background: linear-gradient(135deg, var(--primary), var(--secondary));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -109,12 +107,20 @@
             font-weight: 500;
         }
 
-        /* ============ SECTIONS ============ */
+        .admin-btn {
+            background: transparent;
+            color: var(--text-secondary);
+            border: 1px solid var(--border-color);
+            font-size: 0.85rem;
+            padding: 6px 12px;
+            width: auto;
+            margin-top: 5px;
+        }
+
         .section { display: none; animation: fadeIn 0.4s ease; }
         .section.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* ============ LOGIN ============ */
         .login-card {
             max-width: 500px;
             margin: 30px auto;
@@ -141,11 +147,10 @@
         }
         .login-card input:focus { border-color: var(--primary); outline: none; box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1); }
         
-        /* ============ BUTTONS ============ */
         button {
             width: 100%;
             padding: 14px;
-            border: none;            border-radius: 10px;
+            border: none; border-radius: 10px;
             background: linear-gradient(135deg, var(--primary), var(--secondary));
             color: white;
             font-weight: bold;
@@ -159,7 +164,6 @@
         button.secondary { background: var(--light); color: var(--text-primary); border: 1px solid var(--border-color); }
         button.gold { background: linear-gradient(135deg, #d69e2e, #ecc94b); color: #744210; }
 
-        /* ============ DASHBOARD HEADER ============ */
         .dashboard-header {
             display: flex;
             justify-content: space-between;
@@ -194,7 +198,7 @@
             font-size: 0.85rem;
         }
 
-        /* ============ STATS GRID ============ */        .stats-grid {
+        .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
             gap: 15px;
@@ -212,8 +216,7 @@
         .stat-label { font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 8px; }
         .stat-value { font-size: 2rem; font-weight: bold; color: var(--primary); }
 
-        /* ============ SUBJECTS GRID ============ */
-        .subjects-section h3 { margin-bottom: 20px; color: var(--primary); font-size: 1.3rem; margin-top: 25px; }
+        .subjects-section h3, .history-section h3 { margin-bottom: 20px; color: var(--primary); font-size: 1.3rem; margin-top: 25px; }
         .subjects-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -243,11 +246,64 @@
             background: var(--primary); 
             color: white; 
             padding: 5px 12px; 
-            border-radius: 15px;             display: inline-block; 
+            border-radius: 15px; display: inline-block; 
             font-weight: 600;
         }
 
-        /* ============ MODE SELECTION ============ */
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+            background: var(--light);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+        }
+        .history-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 0.9rem;
+        }
+        .history-table th {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 14px 16px;
+            font-weight: 600;
+        }
+        .history-table td {
+            padding: 14px 16px;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-primary);
+        }
+        .history-table tr:last-child td { border-bottom: none; }
+        .history-table tr:hover { background: rgba(102, 126, 234, 0.05); }
+        
+        .badge-score {
+            font-weight: bold;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+        }
+        .badge-score.pass { background: rgba(72, 187, 120, 0.15); color: #22543d; }
+        .badge-score.fail { background: rgba(245, 101, 101, 0.15); color: #742a2a; }
+        
+        .delete-btn {
+            background: transparent;
+            color: var(--danger);
+            border: 1px solid var(--danger);
+            padding: 5px 10px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            width: auto;
+            margin-top: 0;
+            transition: all 0.2s;
+        }
+        .delete-btn:hover {
+            background: var(--danger);
+            color: white;
+            transform: none;
+            box-shadow: none;
+        }
+
         .mode-selection {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -268,10 +324,6 @@
             transform: translateY(-5px);
             box-shadow: 0 8px 20px rgba(102, 126, 234, 0.2);
         }
-        .mode-card.selected {
-            border-color: var(--success);
-            background: rgba(72, 187, 120, 0.1);
-        }
         .mode-card .icon { font-size: 3rem; margin-bottom: 15px; }
         .mode-card .title { font-size: 1.3rem; font-weight: bold; color: var(--primary); margin-bottom: 10px; }
         .mode-card .desc { font-size: 0.9rem; color: var(--text-secondary); line-height: 1.5; }
@@ -286,13 +338,12 @@
             font-weight: 600;
         }
 
-        /* ============ EXAM INTERFACE ============ */
         .exam-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 25px;
-            flex-wrap: wrap;            gap: 15px;
+            flex-wrap: wrap; gap: 15px;
             padding: 20px;
             background: var(--light);
             border-radius: 15px;
@@ -314,8 +365,11 @@
         }
         .question-image {
             max-width: 100%;
+            max-height: 350px;
+            object-fit: contain;
             border-radius: 10px;
             margin: 15px 0;
+            display: block;
         }
 
         .question-text { 
@@ -341,7 +395,9 @@
         }
         .voice-hint:hover { background: rgba(102, 126, 234, 0.2); }
 
-        .options-grid { display: grid; gap: 12px; margin-bottom: 25px; }        .option-btn {
+        .options-grid { display: grid; gap: 12px; margin-bottom: 25px; } 
+        .option-btn {
+            width: 100%;
             background: var(--card-bg);
             color: var(--text-primary);
             text-align: left;
@@ -354,8 +410,9 @@
             gap: 15px;
             cursor: pointer;
             font-size: 1rem;
+            margin-top: 0;
         }
-        .option-btn:hover:not(:disabled) { border-color: var(--primary); background: rgba(102, 126, 234, 0.05); transform: translateX(5px); }
+        .option-btn:hover:not(:disabled) { border-color: var(--primary); background: rgba(102, 126, 234, 0.05); transform: translateX(5px); box-shadow: none; }
         .option-btn.correct { background: #c6f6d5; border-color: var(--success); color: #22543d; }
         .option-btn.wrong { background: #fed7d7; border-color: var(--danger); color: #742a2a; }
         .option-btn.time-up { background: #fed7d7; border-color: var(--danger); opacity: 0.6; }
@@ -390,7 +447,7 @@
             background: #ebf8ff;
             border-left: 4px solid #4299e1;
             padding: 20px;
-            margin-top: 20px;            border-radius: 8px;
+            margin-top: 20px; border-radius: 8px;
             font-size: 1rem;
             color: var(--text-primary);
             animation: slideDown 0.3s ease;
@@ -398,11 +455,9 @@
         @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
         [data-theme="dark"] .explanation-box { background: #1a365d; border-left-color: #63b3ed; }
 
-        /* ============ EXAM NAVIGATION ============ */
         .exam-nav { display: flex; gap: 12px; margin-top: 25px; }
         .exam-nav button { flex: 1; }
 
-        /* ============ RESULT ============ */
         .result-card {
             text-align: center;
             padding: 40px;
@@ -439,9 +494,9 @@
             text-align: center;
             border: 1px solid var(--border-color);
         }
-        .result-stat .label { font-size: 0.9rem; color: var(--text-secondary); }        .result-stat .value { font-size: 2rem; font-weight: bold; color: var(--primary); margin-top: 8px; }
+        .result-stat .label { font-size: 0.9rem; color: var(--text-secondary); } 
+        .result-stat .value { font-size: 2rem; font-weight: bold; color: var(--primary); margin-top: 8px; }
 
-        /* ============ FLOATING CONTROLS ============ */
         .floating-controls {
             position: fixed;
             bottom: 270px;
@@ -474,7 +529,6 @@
         .theme-toggle::after { content: '🌙'; }
         [data-theme="dark"] .theme-toggle::after { content: '☀️'; }
 
-        /* ============ COUNTDOWN OVERLAY ============ */
         #countdown-overlay {
             position: fixed;
             top: 0; left: 0;
@@ -488,9 +542,8 @@
             font-weight: bold;
             z-index: 1000;
             animation: pulse 1s ease-in-out;
-        }        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
+        } @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
 
-        /* ============ FEEDBACK OVERLAY ============ */
         #feedback-overlay {
             position: fixed;
             top: 50%; left: 50%;
@@ -504,21 +557,11 @@
             text-shadow: 2px 2px 15px rgba(0,0,0,0.3);
         }
 
-        /* ============ ANIMATIONS ============ */
-        @keyframes popIn { 
-            0% { transform: translate(-50%, -50%) scale(0.5); }
-            50% { transform: translate(-50%, -50%) scale(1.2); }
-            100% { transform: translate(-50%, -50%) scale(1); }
-        }
-        @keyframes shake {
-            0%, 100% { transform: translate(-50%, -50%); }
-            25% { transform: translate(-52%, -50%); }
-            75% { transform: translate(-48%, -50%); }
-        }
         .anim-pop { animation: popIn 0.3s forwards; }
         .anim-shake { animation: shake 0.3s forwards; }
+        @keyframes popIn { 0% { transform: translate(-50%, -50%) scale(0.5); } 50% { transform: translate(-50%, -50%) scale(1.2); } 100% { transform: translate(-50%, -50%) scale(1); } }
+        @keyframes shake { 0%, 100% { transform: translate(-50%, -50%); } 25% { transform: translate(-52%, -50%); } 75% { transform: translate(-48%, -50%); } }
 
-        /* ============ RESPONSIVE ============ */
         @media (max-width: 768px) {
             .container { padding: 20px; }
             .school-logo { width: 80px; height: 80px; }
@@ -530,42 +573,31 @@
             .result-stats { grid-template-columns: 1fr; }
             .subjects-grid { grid-template-columns: 1fr; }
             #countdown-overlay { font-size: 8rem; }
+            .history-table th, .history-table td { padding: 10px; font-size: 0.8rem; }
         }
     </style>
 </head>
 <body>
-    <!-- FLOATING CONTROLS -->
     <div class="floating-controls">
         <div class="float-btn sound-toggle" id="sound-toggle"></div>
-        <div class="float-btn theme-toggle" id="theme-toggle"></div>    </div>
+        <div class="float-btn theme-toggle" id="theme-toggle"></div> 
+    </div>
 
-    <!-- COUNTDOWN OVERLAY -->
     <div id="countdown-overlay">3</div>
-
-    <!-- FEEDBACK OVERLAY -->
     <div id="feedback-overlay"></div>
 
     <div class="container">
-        <!-- ============ HEADER WITH LOGO ============ -->
         <header class="main-header">
             <div class="logo-section">
                 <img src="logo.png" alt="Scholars Breeding Logo" class="school-logo" onerror="this.style.display='none'">
                 <h1 class="school-name">Scholars Breeding</h1>
                 <p class="school-subtitle">WAEC, NECO, GCE & JAMB Prep Platform</p>
             </div>
-
-
             <div class="admin-btn-container">
-                <button class="admin-btn" onclick="goToAdmin()">
-                    ⚙️ Breeder's Access
-                </button>
+                <button class="admin-btn" onclick="goToAdmin()">⚙️ Breeder's Access</button>
             </div>
-
-
-
         </header>
 
-        <!-- ============ LOGIN SECTION ============ -->
         <div id="login-section" class="section active">
             <div class="login-card">
                 <h2>🎓 Student Login</h2>
@@ -578,11 +610,10 @@
             </div>
         </div>
 
-        <!-- ============ DASHBOARD SECTION ============ -->
         <div id="dashboard-section" class="section">
             <div class="dashboard-header">
                 <div class="user-info">
-                    <h2>Welcome, <span id="user-name"></span>! 👋</h2>
+                    <h2>Welcome, <span id="user-name">Student</span>! 👋</h2>
                     <p id="user-exam-info"></p>
                     <div class="user-id-box">🆔 <span id="user-access-id"></span></div>
                     <div class="expiration-warning" id="expiration-warning" style="display: none;">
@@ -596,7 +627,8 @@
                 <div class="stat-card">
                     <div class="stat-label">📚 Subjects</div>
                     <div class="stat-value" id="stat-subjects">0</div>
-                </div>                <div class="stat-card">
+                </div> 
+                <div class="stat-card">
                     <div class="stat-label">📝 Exams Taken</div>
                     <div class="stat-value" id="stat-exams">0</div>
                 </div>
@@ -608,44 +640,88 @@
 
             <div class="subjects-section">
                 <h3>📚 Your Subjects</h3>
-                <p style="color: var(--text-secondary); margin-bottom: 15px; font-size: 0.9rem;">
-                    Select a subject to start practicing
-                </p>
+                <p style="color: var(--text-secondary); margin-bottom: 15px; font-size: 0.9rem;">Select a subject to start practicing</p>
                 <div id="subjects-grid" class="subjects-grid">
                     <p style="color: var(--text-secondary);">Loading subjects...</p>
                 </div>
             </div>
-        </div>
 
-        <!-- ============ MODE SELECTION ============ -->
-        <div id="mode-section" class="section">
-            <h2 style="color: var(--primary); margin-bottom: 20px; font-size: 1.6rem;">📖 <span id="selected-subject-name"></span></h2>
-            <p style="margin-bottom: 25px; font-size: 1rem; color: var(--text-secondary);">Choose your practice mode:</p>
-
-            <div class="mode-selection">
-                <div class="mode-card" onclick="selectMode('foundation')">
-                    <div class="icon">🟢</div>
-                    <div class="title">Foundation Mode</div>
-                    <div class="desc">Simplified questions for beginners. Build your confidence with easier exam-style questions.</div>
-                    <div class="time">⏱️ Relaxed - 2 hours</div>
-                </div>
-                <div class="mode-card" onclick="selectMode('standard')">
-                    <div class="icon">🔵</div>
-                    <div class="title">Standard Mode</div>
-                    <div class="desc">Normal examination difficulty. Intermediate level practice for steady improvement.</div>
-                    <div class="time">⏱️ 45 seconds per question</div>
-                </div>
-                <div class="mode-card" onclick="selectMode('exam')">
-                    <div class="icon">🔴</div>
-                    <div class="title">Exam Mode</div>
-                    <div class="desc">Full examination difficulty. Experience the real WAEC, NECO, GCE, or JAMB test environment.</div>
-                    <div class="time">⏱️ 30 seconds - JAMB Style</div>
+            <div class="history-section">
+                <h3>📊 Performance History</h3>
+                <div class="table-responsive">
+                    <table class="history-table">
+                        <thead>
+                            <tr>
+                                <th>Subject</th>
+                                <th>Score</th>
+                                <th>Percentage</th>
+                                <th>Pace Mode</th>
+                                <th>Time Used</th>
+                                <th>Date</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="history-table-body">
+                            <tr>
+                                <td colspan="7" style="text-align: center; color: var(--text-secondary); padding: 20px;">Loading performance history logs...</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
+        </div>
 
+        <div id="category-section" class="section">
+            <h2 style="color: var(--primary); margin-bottom: 20px; font-size: 1.6rem;">📖 <span id="category-subject-name"></span></h2>
+            <p style="margin-bottom: 25px; font-size: 1rem; color: var(--text-secondary);">Choose your Study Category:</p>
+
+            <div class="mode-selection">
+                <div class="mode-card" onclick="selectCategory('foundation')">
+                    <div class="icon">🟢</div>
+                    <div class="title">Foundation Mode</div>
+                    <div class="desc">Simplified questions for beginners. Build your foundational base with core exam structures.</div>
+                </div>
+                <div class="mode-card" onclick="selectCategory('standard')">
+                    <div class="icon">🔵</div>
+                    <div class="title">Standard Mode</div>
+                    <div class="desc">Normal curriculum guidelines difficulty. Mid-tier balanced assessment strategies.</div>
+                </div>
+                <div class="mode-card" onclick="selectCategory('exam')">
+                    <div class="icon">🔴</div>
+                    <div class="title">Exam Mode</div>
+                    <div class="desc">Full complete examination structural difficulty modeled from real timed assessment papers.</div>
+                </div>
+            </div>
             <button onclick="showSection('dashboard-section')" class="secondary">← Back to Dashboard</button>
         </div>
-        <!-- ============ EXAM SECTION ============ -->
+
+        <div id="mode-section" class="section">
+            <h2 style="color: var(--primary); margin-bottom: 10px; font-size: 1.6rem;">⏱️ Setup Pace Modality</h2>
+            <p style="margin-bottom: 25px; font-size: 1rem; color: var(--text-secondary);">Configure timed speed variants for your selected mode:</p>
+
+            <div class="mode-selection">
+                <div class="mode-card" onclick="selectFinalMode('beginner')">
+                    <div class="icon">⏳</div>
+                    <div class="title">Beginner Mode</div>
+                    <div class="desc">Take your time to think, read and study standard concepts comfortably.</div>
+                    <div class="time">⏱️ 2½ Hours Total Time</div>
+                </div>
+                <div class="mode-card" onclick="selectFinalMode('advanced')">
+                    <div class="icon">⚡</div>
+                    <div class="title">Advanced Mode</div>
+                    <div class="desc">Paced processing constraints. Simulates fast structural query evaluation templates.</div>
+                    <div class="time">⏱️ 45 Seconds Per Q</div>
+                </div>
+                <div class="mode-card" onclick="selectFinalMode('professional')">
+                    <div class="icon">🔥</div>
+                    <div class="title">Professional Mode</div>
+                    <div class="desc">Strict critical speed conditions modeled similarly to competitive assessment formats.</div>
+                    <div class="time">⏱️ 30 Seconds Per Q</div>
+                </div>
+            </div>
+            <button onclick="showSection('category-section')" class="secondary">← Back to Categories</button>
+        </div>
+
         <div id="exam-section" class="section">
             <div class="exam-header">
                 <div>
@@ -653,7 +729,7 @@
                     <small id="mode-badge" style="color: var(--text-secondary);">Mode</small>
                 </div>
                 <div class="timer-container">
-                    <div class="timer-display" id="timer-display">02:00:00</div>
+                    <div class="timer-display" id="timer-display">00:00</div>
                     <div class="timer-bar"><div class="timer-progress" id="timer-progress"></div></div>
                 </div>
                 <div style="text-align:right;">
@@ -671,7 +747,7 @@
             <div class="options-grid" id="options-container"></div>
 
             <div class="explanation-box" id="explanation-box">
-                <strong>💡 Explanation:</strong> <span id="explanation-text"></span>
+                <div id="explanation-content"></div>
                 <img id="exp-image" class="question-image" style="display: none; margin-top: 10px;" alt="Explanation Image">
             </div>
 
@@ -680,11 +756,9 @@
                 <button id="next-btn" onclick="nextQuestion()">Next ➡️</button>
                 <button id="submit-btn" class="gold" onclick="finishExam(true)" style="display:none;">✅ Submit Exam</button>
             </div>
-
             <button class="secondary" onclick="confirmQuitExam()" style="margin-top: 20px; font-size: 0.9rem;">🚪 Quit Exam</button>
         </div>
 
-        <!-- ============ RESULT SECTION ============ -->
         <div id="result-section" class="section">
             <h2 style="text-align: center; color: var(--primary); margin-bottom: 25px; font-size: 2rem;">🎉 Exam Completed!</h2>
             
@@ -694,7 +768,8 @@
                 <div class="percentage" id="percentage">0%</div>
                 <div class="grade-badge" id="grade-display">Pending</div>
                 <p id="feedback-msg" style="margin-top: 20px; font-style: italic; color: var(--text-secondary); font-size: 1.1rem;"></p>
-            </div>            <div class="result-stats">
+            </div> 
+            <div class="result-stats">
                 <div class="result-stat">
                     <div class="label">✅ Correct</div>
                     <div class="value" id="correct-count">0</div>
@@ -712,29 +787,23 @@
             <button onclick="showSection('dashboard-section'); loadDashboard();">🔄 Back to Dashboard</button>
             <button class="secondary" onclick="studentLogout()">🚪 Logout</button>
         </div>
-
     </div>
 
     <script>
-        // ==========================================
-        // ✅ FIRESTORE DESTRUCTURING SHIMS
-        // ==========================================
-        const collection = (...args) => window.firestoreFns.collection(...args);
-        const addDoc = (...args) => window.firestoreFns.addDoc(...args);
-        const getDocs = (...args) => window.firestoreFns.getDocs(...args);
-        const doc = (...args) => window.firestoreFns.doc(...args);
-        const deleteDoc = (...args) => window.firestoreFns.deleteDoc(...args);
-        const updateDoc = (...args) => window.firestoreFns.updateDoc(...args);
-        const query = (...args) => window.firestoreFns.query(...args);
-        const where = (...args) => window.firestoreFns.where(...args);
-        const orderBy = (...args) => window.firestoreFns.orderBy(...args);
+        const getCollectionRef = (...args) => window.firestoreFns.collection(...args);
+        const addDocRef = (...args) => window.firestoreFns.addDoc(...args);
+        const getDocsRef = (...args) => window.firestoreFns.getDocs(...args);
+        const getDocRef = (...args) => window.firestoreFns.doc(...args);
+        const updateDocRef = (...args) => window.firestoreFns.updateDoc(...args);
+        const queryRef = (...args) => window.firestoreFns.query(...args);
+        const whereCondition = (...args) => window.firestoreFns.where(...args);
+        const orderByCondition = (...args) => window.firestoreFns.orderBy ? window.firestoreFns.orderBy(...args) : null;
+        const deleteDocRef = (...args) => window.firestoreFns.deleteDoc(...args);
 
-        // ==========================================
-        // 🔐 STATES
-        // ==========================================
         let currentUser = null;
         let currentSubject = null;
-        let currentMode = '';
+        let selectedCategoryMode = ''; 
+        let currentMode = '';     
         let currentQuestions = [];
         let currentQuestionIndex = 0;
         let score = 0;
@@ -743,16 +812,33 @@
         let totalTime = 0;
         let timePerQuestion = 0;
         let examStartTime = 0;
-        let isSoundEnabled = true;        let userAnswers = {};
+        let isSoundEnabled = true; 
+        let userAnswers = {};
         let nextQuestionTimeout = null;
         let userSubjects = [];
 
         const positiveMessages = ["Wow!", "Amazing!", "Nice one!", "Good job!", "Excellent!", "Perfect!", "Correct!", "Fantastic!"];
         const negativeMessages = ["Oh sorry!", "Try again!", "Not quite!", "Incorrect!", "Wrong answer!", "Keep trying!"];
 
-        // ==========================================
-        // 🎨 THEME & SOUND CONFIGURATION
-        // ==========================================
+        // Initialize Audio context safely
+        let audioCtx = null;
+        function playTone(freq, duration) {
+            try {
+                if (!window.AudioContext && !window.webkitAudioContext) return;
+                if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'sine';
+                osc.frequency.value = freq;
+                gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + duration);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + duration);
+            } catch(e) { console.error(e); }
+        }
+
         if (localStorage.getItem('hgdl_theme') === 'dark') {
             document.documentElement.setAttribute('data-theme', 'dark');
         }
@@ -787,38 +873,40 @@
             window.scrollTo(0, 0);
         }
 
+        function goToAdmin() { window.location.href = 'admin.html'; }
 
-            function goToAdmin() {
-            window.location.href = 'admin.html';
+        function getDeviceId() {
+            let deviceId = localStorage.getItem('scholars_device_id');
+            if (!deviceId) {
+                deviceId = 'DEV_' + Math.random().toString(36).substring(2, 15) + Date.now().toString(36);
+                localStorage.setItem('scholars_device_id', deviceId);
+            }
+            return deviceId;
         }
 
-
-
-
-
-        // ==========================================
-        // 🔐 LOG IN ENGINE WITH DEVICE BINDING
-        // ==========================================
         async function studentLogin() {
             const accessId = document.getElementById('access-id-input').value.trim().toUpperCase();
             if (!accessId) return alert('⚠️ Please enter your Access ID');
             try {
-                const q = query(collection(window.db, "registrations"), where("accessId", "==", accessId));
-                const snap = await getDocs(q);
+                if (!window.db || !window.firestoreFns) {
+                    return alert('⚡ System components are loading. Please give it an operational moment.');
+                }
+
+                const q = queryRef(getCollectionRef(window.db, "registrations"), whereCondition("accessId", "==", accessId));
+                const snap = await getDocsRef(q);
 
                 if (snap.empty) {
                     alert('❌ Invalid Access ID. Please check and try again.');
                     return;
                 }
+                const docId = snap.docs[0].id;
                 const userData = snap.docs[0].data();
                 
-                // Check if account is active
-                if (userData.status !== 'active') {
-                    alert('⏸️ Your account has been paused. Please contact support.');
+                if (userData.status === 'paused' && userData.pauseReason !== 'Multiple device login detected') {
+                    alert('⏸️ Your account is currently suspended or paused. Please contact support.');
                     return;
                 }
 
-                // Check expiration
                 if (userData.expirationDate) {
                     const expDate = userData.expirationDate.toDate ? userData.expirationDate.toDate() : new Date(userData.expirationDate);
                     if (new Date() > expDate) {
@@ -827,34 +915,53 @@
                     }
                 }
 
-                // Device binding check
-                const deviceId = getDeviceId();
-                if (userData.deviceBound && userData.deviceId && userData.deviceId !== deviceId) {
-                    // Update status to paused to prevent further access
-                    await updateDoc(doc(window.db, "registrations", snap.docs[0].id), {
-                        status: 'paused',
-                        pauseReason: 'Multiple device login detected'
-                    });
-                    alert('🚫 SECURITY ALERT: This ID has been used on another device. Your account has been suspended for security reasons. Contact support immediately.');
-                    return;
+                const myDeviceId = getDeviceId();
+                let currentDevices = userData.loggedDevices || [];
+
+                if (currentDevices.length === 0 && userData.deviceId) {
+                    currentDevices.push(userData.deviceId);
                 }
 
-                // Bind device if not already bound
-                if (!userData.deviceBound) {
-                    await updateDoc(doc(window.db, "registrations", snap.docs[0].id), {
+                if (userData.status === 'active' && userData.pauseReason === 'Multiple device login detected') {
+                    currentDevices = [myDeviceId]; 
+                    await updateDocRef(getDocRef(window.db, "registrations", docId), {
+                        pauseReason: "",
+                        loggedDevices: currentDevices,
+                        lastLoginAt: new Date()
+                    });
+                } else {
+                    if (userData.status === 'paused' && userData.pauseReason === 'Multiple device login detected') {
+                        alert('🚫 SECURITY ALERT: This ID has been used on too many distinct devices. Access has been suspended. Please contact Admin to unlock your profile.');
+                        return;
+                    }
+
+                    if (!currentDevices.includes(myDeviceId)) {
+                        currentDevices.push(myDeviceId);
+                    }
+
+                    if (currentDevices.length > 2) {
+                        await updateDocRef(getDocRef(window.db, "registrations", docId), {
+                            status: 'paused',
+                            pauseReason: 'Multiple device login detected'
+                        });
+                        alert('🚫 SECURITY ALERT: This ID has been used across more than 2 devices. Your account has been automatically locked out. Contact Admin.');
+                        return;
+                    }
+
+                    await updateDocRef(getDocRef(window.db, "registrations", docId), {
                         deviceBound: true,
-                        deviceId: deviceId,
+                        deviceId: myDeviceId, 
+                        loggedDevices: currentDevices,
                         lastLoginAt: new Date()
                     });
                 }
 
-                currentUser = { id: snap.docs[0].id, ...userData };
+                currentUser = { id: docId, ...userData, accessId: accessId };
 
-                // Display user info                document.getElementById('user-name').textContent = userData.fullName;
-                document.getElementById('user-exam-info').textContent = userData.examType;
-                document.getElementById('user-access-id').textContent = userData.accessId;
+                document.getElementById('user-name').textContent = currentUser.fullName || "Student";
+                document.getElementById('user-exam-info').textContent = currentUser.examType || "";
+                document.getElementById('user-access-id').textContent = currentUser.accessId || "";
 
-                // Show expiration warning
                 if (userData.expirationDate) {
                     const expDate = userData.expirationDate.toDate ? userData.expirationDate.toDate() : new Date(userData.expirationDate);
                     document.getElementById('expiration-date').textContent = expDate.toLocaleDateString();
@@ -864,23 +971,12 @@
                 showSection('dashboard-section');
                 await loadDashboard();
 
-                if (isSoundEnabled) speak(`Welcome ${userData.fullName}`);
+                if (isSoundEnabled) speak(`Welcome ${currentUser.fullName || "Student"}`);
 
             } catch (e) {
                 console.error('Login error:', e);
                 alert('❌ Connection error: ' + e.message);
             }
-        }
-
-        function getDeviceId() {
-            // Generate a simple device fingerprint
-            let deviceId = localStorage.getItem('scholars_device_id');
-            if (!deviceId) {
-                deviceId = 'DEV_' + Math.random().toString(36).substring(2, 15) + 
-                           Math.random().toString(36).substring(2, 15);
-                localStorage.setItem('scholars_device_id', deviceId);
-            }
-            return deviceId;
         }
 
         function studentLogout() {
@@ -890,27 +986,65 @@
             showSection('login-section');
         }
 
-        // ==========================================
-        // 📊 DASHBOARD & SUBJECTS LOADING
-        // ==========================================
         async function loadDashboard() {
             try {
-                // Load user's subjects
                 userSubjects = currentUser.subjects || [];
                 document.getElementById('stat-subjects').textContent = userSubjects.length;
 
-                // Load results history                const historyQ = query(collection(window.db, "results"), where("user", "==", currentUser.accessId));
-                const historySnap = await getDocs(historyQ);
+                let historyQ;
+                if (orderByCondition) {
+                    historyQ = queryRef(getCollectionRef(window.db, "results"), whereCondition("user", "==", currentUser.accessId), orderByCondition("timestamp", "desc"));
+                } else {
+                    historyQ = queryRef(getCollectionRef(window.db, "results"), whereCondition("user", "==", currentUser.accessId));
+                }
+                
+                let historySnap;
+                try {
+                    historySnap = await getDocsRef(historyQ);
+                } catch(err) {
+                    historyQ = queryRef(getCollectionRef(window.db, "results"), whereCondition("user", "==", currentUser.accessId));
+                    historySnap = await getDocsRef(historyQ);
+                }
                 
                 let totalAttempts = historySnap.size;
                 let aggregateScore = 0;
-                historySnap.forEach(d => { aggregateScore += d.data().percentage || 0; });
+                let historyHtml = '';
+
+                if (totalAttempts === 0) {
+                    historyHtml = `<tr><td colspan="7" style="text-align: center; color: var(--text-secondary); padding: 25px;">No historical test sessions recorded.</td></tr>`;
+                } else {
+                    historySnap.forEach(d => {
+                        const data = d.data();
+                        aggregateScore += data.percentage || 0;
+                        
+                        let formattedDate = 'N/A';
+                        if (data.timestamp) {
+                            const dObj = data.timestamp.toDate ? data.timestamp.toDate() : new Date(data.timestamp);
+                            formattedDate = dObj.toLocaleDateString(undefined, {month: 'short', day: 'numeric', year: 'numeric'});
+                        }
+
+                        const scoreBadgeClass = (data.percentage || 0) >= 45 ? 'pass' : 'fail';
+                        const modeLabel = data.mode ? data.mode.toUpperCase().replace('-', ' / ') : 'STANDARD';
+
+                        historyHtml += `
+                            <tr id="row-${d.id}">
+                                <td><strong>${data.subjectName || 'Subject'}</strong></td>
+                                <td>${data.score || 0} / ${data.totalQuestions || 0}</td>
+                                <td><span class="badge-score ${scoreBadgeClass}">${data.percentage || 0}%</span></td>
+                                <td><small>${modeLabel}</small></td>
+                                <td>⏱️ ${data.timeUsed || '00:00'}</td>
+                                <td>${formattedDate}</td>
+                                <td><button class="delete-btn" onclick="deleteHistoryRecord('${d.id}')">🗑️ Delete</button></td>
+                            </tr>
+                        `;
+                    });
+                }
                 
+                document.getElementById('history-table-body').innerHTML = historyHtml;
                 document.getElementById('stat-exams').textContent = totalAttempts;
                 const finalAvg = totalAttempts > 0 ? Math.round(aggregateScore / totalAttempts) : 0;
                 document.getElementById('stat-avg').textContent = finalAvg + '%';
 
-                // Display subjects
                 const grid = document.getElementById('subjects-grid');
                 if (userSubjects.length === 0) {
                     grid.innerHTML = '<p style="color: var(--text-secondary); text-align: center; padding: 40px;">No subjects available. Please contact support.</p>';
@@ -921,99 +1055,92 @@
                     <div class="subject-card" onclick="selectSubject('${s.id}', '${s.name}')">
                         <div class="icon">📚</div>
                         <div class="name">${s.name}</div>
-                        <div class="q-count" id="q-count-${s.id}">Loading...</div>
+                        <div class="q-count" id="q-count-${s.id}">Loading counts...</div>
                     </div>
                 `).join('');
 
-                // Load question counts for each subject
                 for (const subj of userSubjects) {
-                    const qCount = query(collection(window.db, "questions"), 
-                        where("subjectId", "==", subj.id),
-                        where("status", "==", "active"));
-                    const qSnap = await getDocs(qCount);
+                    const qCountQuery = queryRef(getCollectionRef(window.db, "questions"), whereCondition("subjectId", "==", subj.id));
+                    const qSnap = await getDocsRef(qCountQuery);
                     const el = document.getElementById(`q-count-${subj.id}`);
                     if(el) el.textContent = `${qSnap.size} Questions`;
                 }
-
             } catch (e) {
-                console.error('Error loading dashboard:', e);
+                console.error('Error loading dashboard metrics:', e);
             }
         }
 
-        // ==========================================
-        // 📖 MODE SELECTION
-        // ==========================================
+        async function deleteHistoryRecord(recordId) {
+            if (!confirm("⚠️ Are you sure you want to permanently delete this exam history entry?")) return;
+            try {
+                await deleteDocRef(getDocRef(window.db, "results", recordId));
+                const row = document.getElementById(`row-${recordId}`);
+                if (row) row.remove();
+                await loadDashboard(); 
+                alert("✅ Record successfully removed from logs.");
+            } catch (e) {
+                console.error("Deletion failure:", e);
+                alert("❌ Encountered error trying to process entry removal: " + e.message);
+            }
+        }
+
         function selectSubject(subjectId, subjectName) {
             currentSubject = { id: subjectId, name: subjectName };
-            document.getElementById('selected-subject-name').textContent = subjectName;
+            document.getElementById('category-subject-name').textContent = subjectName;
+            showSection('category-section');
+        }
+
+        function selectCategory(category) {
+            selectedCategoryMode = category;
             showSection('mode-section');
-            
-            // Clear previous selection            document.querySelectorAll('.mode-card').forEach(card => card.classList.remove('selected'));
         }
 
-        function selectMode(mode) {
+        function selectFinalMode(mode) {
             currentMode = mode;
-            
-            // Visual feedback
-            document.querySelectorAll('.mode-card').forEach(card => card.classList.remove('selected'));
-            event.target.closest('.mode-card').classList.add('selected');
-            
-            // Start exam after short delay
-            setTimeout(() => {
-                startExam();
-            }, 500);
+            setTimeout(() => { startExam(); }, 300);
         }
 
-        // ==========================================
-        // 🎯 EXAM CONTROLLER
-        // ==========================================
         async function startExam() {
             try {
-                // Load questions based on mode (Foundation, Standard, Exam)
-                // For now, we'll load all active questions for the subject
-                // In production, you'd filter by difficulty/mode
-                const q = query(collection(window.db, "questions"), 
-                    where("subjectId", "==", currentSubject.id),
-                    where("status", "==", "active"));
-                
-                const snap = await getDocs(q);
+                const q = queryRef(getCollectionRef(window.db, "questions"), whereCondition("subjectId", "==", currentSubject.id));
+                const snap = await getDocsRef(q);
                 let questions = [];
-                snap.forEach(d => questions.push({ id: d.id, ...d.data() }));
+                
+                snap.forEach(d => {
+                    questions.push({ id: d.id, ...d.data() });
+                });
 
                 if (questions.length === 0) {
-                    alert('⚠️ No questions available for this subject yet!');
+                    alert('⚠️ No questions available for this subject yet.');
                     showSection('dashboard-section');
                     return;
                 }
 
-                // Shuffle questions
                 currentQuestions = questions.sort(() => Math.random() - 0.5);
                 currentQuestionIndex = 0;
                 score = 0;
                 userAnswers = {};
                 examStartTime = Date.now();
 
-                // Set timer based on mode
-                if (currentMode === 'foundation') {
+                if (currentMode === 'beginner') {
                     timePerQuestion = 0;
-                    totalTime = 7200; // 2 hours
-                } else if (currentMode === 'standard') {                    timePerQuestion = 45;
+                    totalTime = 9000; 
+                } else if (currentMode === 'advanced') {
+                    timePerQuestion = 45;
                     totalTime = currentQuestions.length * 45;
-                } else { // exam mode
+                } else { 
                     timePerQuestion = 30;
                     totalTime = currentQuestions.length * 30;
                 }
 
                 timeLeft = timePerQuestion > 0 ? timePerQuestion : totalTime;
 
-                // Update UI
                 document.getElementById('subject-badge').textContent = currentSubject.name;
-                document.getElementById('mode-badge').textContent = currentMode.charAt(0).toUpperCase() + currentMode.slice(1) + ' Mode';
+                document.getElementById('mode-badge').textContent = `${selectedCategoryMode.toUpperCase()} (${currentMode.toUpperCase()})`;
 
                 showSection('exam-section');
                 updateTimerDisplay();
 
-                // Countdown before starting
                 runCountdown(() => {
                     startTimer();
                     loadQuestion(0);
@@ -1030,7 +1157,6 @@
             overlay.style.display = 'flex';
             let count = 3;
             overlay.textContent = count;
-
             if (isSoundEnabled) speak(count.toString());
 
             const interval = setInterval(() => {
@@ -1046,6 +1172,7 @@
                 }
             }, 1000);
         }
+
         function startTimer() {
             if (timerInterval) clearInterval(timerInterval);
             updateTimerDisplay();
@@ -1062,21 +1189,18 @@
 
         function updateTimerDisplay() {
             if (timeLeft < 0) timeLeft = 0;
+            const hours = Math.floor(timeLeft / 3600);
+            const minutes = Math.floor((timeLeft % 3600) / 60);
+            const seconds = timeLeft % 60;
             
             let displayStr = "";
-            if (timeLeft >= 3600) {
-                const hours = Math.floor(timeLeft / 3600).toString().padStart(2, '0');
-                const minutes = Math.floor((timeLeft % 3600) / 60).toString().padStart(2, '0');
-                const seconds = (timeLeft % 60).toString().padStart(2, '0');
-                displayStr = `${hours}:${minutes}:${seconds}`;
+            if (hours > 0 || currentMode === 'beginner') {
+                displayStr = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
             } else {
-                const minutes = Math.floor(timeLeft / 60).toString().padStart(2, '0');
-                const seconds = (timeLeft % 60).toString().padStart(2, '0');
-                displayStr = `${minutes}:${seconds}`;
+                displayStr = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
             }
             
             document.getElementById('timer-display').textContent = displayStr;
-
             const pct = timePerQuestion > 0 ? (timeLeft / timePerQuestion) * 100 : (timeLeft / totalTime) * 100;
             const bar = document.getElementById('timer-progress');
             bar.style.width = `${pct}%`;
@@ -1085,17 +1209,17 @@
 
         function handleTimeUp() {
             if (userAnswers[currentQuestionIndex] !== undefined) return;
-
             userAnswers[currentQuestionIndex] = -1;
             loadQuestion(currentQuestionIndex);
 
             if (isSoundEnabled) {
                 playTone(150, 0.3);
-                speak("Time's up!");
+                speak("Time expired!");
             }
 
             if (nextQuestionTimeout) clearTimeout(nextQuestionTimeout);
-            nextQuestionTimeout = setTimeout(() => {                if (currentQuestionIndex < currentQuestions.length - 1) {
+            nextQuestionTimeout = setTimeout(() => { 
+                if (currentQuestionIndex < currentQuestions.length - 1) {
                     currentQuestionIndex++;
                     loadQuestion(currentQuestionIndex);
                     if (timePerQuestion > 0) {
@@ -1105,68 +1229,74 @@
                 } else {
                     finishExam(false);
                 }
-            }, 4000);
+            }, 3000);
         }
 
-        // ==========================================
-        // 📝 LOAD & DISPLAY QUESTIONS
-        // ==========================================
         function loadQuestion(idx) {
             if (!currentQuestions[idx]) return;
-
             const q = currentQuestions[idx];
-            document.getElementById('q-text').textContent = q.q;
+            
+            document.getElementById('q-text').textContent = q.q || q.question || "No Question text provided.";
             document.getElementById('question-counter').textContent = `Q: ${idx + 1}/${currentQuestions.length}`;
             document.getElementById('live-score').textContent = score;
 
-            // Handle question image
             const qImage = document.getElementById('q-image');
-            if (q.questionImage) {
-                qImage.src = q.questionImage;
+            const targetImgSrc = q.questionImage || q.image || q.imageUrl || null;
+            if (targetImgSrc) {
+                qImage.src = targetImgSrc;
                 qImage.style.display = 'block';
             } else {
                 qImage.style.display = 'none';
             }
 
             const expBox = document.getElementById('explanation-box');
+            const expContent = document.getElementById('explanation-content');
+            const expImage = document.getElementById('exp-image');
             const hasAnswered = userAnswers[idx] !== undefined;
 
             if (hasAnswered) {
                 expBox.style.display = 'block';
+                const explanationText = q.exp || q.explanation || 'No step-by-step explanation provided.';
                 if (userAnswers[idx] === -1) {
-                    expBox.innerHTML = '<strong style="color: var(--danger);">⏰ Time Up!</strong><br>' + (q.exp || 'No explanation provided.');
+                    expContent.innerHTML = `<strong style="color: var(--danger);">⏰ Time Up!</strong><br>${explanationText}`;
                 } else {
-                    expBox.innerHTML = '<strong>💡 Explanation:</strong> ' + (q.exp || 'No explanation provided.');
+                    expContent.innerHTML = `<strong>💡 Explanation:</strong> ${explanationText}`;
                 }
                 
-                // Handle explanation image
-                const expImage = document.getElementById('exp-image');
-                if (q.explanationImage) {
-                    expImage.src = q.explanationImage;
+                const targetExpImg = q.explanationImage || q.expImage || null;
+                if (targetExpImg) {
+                    expImage.src = targetExpImg;
                     expImage.style.display = 'block';
-                } else {                    expImage.style.display = 'none';
+                } else {
+                    expImage.style.display = 'none';
                 }
             } else {
                 expBox.style.display = 'none';
+                expImage.style.display = 'none';
             }
 
             const container = document.getElementById('options-container');
             container.innerHTML = '';
 
-            if (q.type === 'objective' || !q.type) {
-                // Objective question
+            const isTheory = (q.type === 'theory' || !q.options);
+            if (!isTheory) {
                 q.options.forEach((opt, i) => {
                     const btn = document.createElement('button');
                     btn.className = 'option-btn';
                     btn.innerHTML = `<span class="option-label">${String.fromCharCode(65 + i)}</span> ${opt}`;
 
+                    let correctAnswerIndex = parseInt(q.answer);
+                    if (isNaN(correctAnswerIndex) && q.correctAnswer !== undefined) {
+                        correctAnswerIndex = parseInt(q.correctAnswer);
+                    }
+
                     if (hasAnswered) {
                         btn.disabled = true;
                         if (userAnswers[idx] === -1) {
-                            if (i === q.answer) btn.classList.add('correct');
+                            if (i === correctAnswerIndex) btn.classList.add('correct');
                             else btn.classList.add('time-up');
                         } else {
-                            if (i === q.answer) btn.classList.add('correct');
+                            if (i === correctAnswerIndex) btn.classList.add('correct');
                             else if (i === userAnswers[idx]) btn.classList.add('wrong');
                         }
                     } else {
@@ -1174,34 +1304,31 @@
                     }
                     container.appendChild(btn);
                 });
-            } else if (q.type === 'theory') {
-                // Theory question
+            } else {
                 const textarea = document.createElement('textarea');
                 textarea.className = 'theory-answer-box';
-                textarea.placeholder = 'Type your answer here...';
+                textarea.placeholder = 'Type your response here...';
                 textarea.id = 'theory-answer';
                 
                 if (hasAnswered) {
                     textarea.disabled = true;
                     textarea.value = userAnswers[idx];
                     
-                    // Show sample answer and score
                     const sampleDiv = document.createElement('div');
                     sampleDiv.style.marginTop = '15px';
                     sampleDiv.style.padding = '15px';
                     sampleDiv.style.background = 'var(--light)';
                     sampleDiv.style.borderRadius = '8px';
                     sampleDiv.innerHTML = `
-                        <strong>📝 Sample Answer:</strong><br>
-                        ${q.sampleAnswer || 'No sample answer provided.'}<br><br>                        <strong>Your Score:</strong> ${q.score || '0'}/100%
+                        <strong>📝 Sample Grading Matrix Answer:</strong><br>
+                        ${q.sampleAnswer || q.correctAnswer || 'No criteria provided.'}
                     `;
                     container.appendChild(textarea);
                     container.appendChild(sampleDiv);
                 } else {
                     container.appendChild(textarea);
-                    
                     const submitBtn = document.createElement('button');
-                    submitBtn.textContent = 'Submit Answer';
+                    submitBtn.textContent = 'Submit Answer Content';
                     submitBtn.style.marginTop = '15px';
                     submitBtn.onclick = () => handleTheoryAnswer(idx, textarea.value);
                     container.appendChild(submitBtn);
@@ -1213,19 +1340,24 @@
             document.getElementById('next-btn').style.display = isLast ? 'none' : 'block';
             document.getElementById('submit-btn').style.display = isLast ? 'block' : 'none';
 
-            if (isSoundEnabled && !hasAnswered && q.type !== 'theory') {
+            if (isSoundEnabled && !hasAnswered && !isTheory) {
                 setTimeout(() => { speakQuestion(q); }, 300);
             }
         }
 
         function handleAnswer(idx, optIdx, btn) {
             if (userAnswers[idx] !== undefined) return;
-
             if (nextQuestionTimeout) { clearTimeout(nextQuestionTimeout); nextQuestionTimeout = null; }
             window.speechSynthesis?.cancel();
 
             userAnswers[idx] = optIdx;
-            const correct = currentQuestions[idx].answer;
+            const q = currentQuestions[idx];
+            
+            let correct = parseInt(q.answer);
+            if (isNaN(correct) && q.correctAnswer !== undefined) {
+                correct = parseInt(q.correctAnswer);
+            }
+
             const allBtns = document.querySelectorAll('.option-btn');
             allBtns.forEach(b => b.disabled = true);
 
@@ -1233,7 +1365,6 @@
                 btn.classList.add('correct', 'anim-pop');
                 score++;
                 document.getElementById('live-score').textContent = score;
-
                 if (isSoundEnabled) {
                     playTone(880, 0.1);
                     setTimeout(() => playTone(1100, 0.1), 100);
@@ -1242,15 +1373,14 @@
             } else {
                 btn.classList.add('wrong', 'anim-shake');
                 if (allBtns[correct]) allBtns[correct].classList.add('correct');
-                if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
                 if (isSoundEnabled) playTone(200, 0.2);
                 showFeedbackOverlay(false);
             }
 
             document.getElementById('explanation-box').style.display = 'block';
-            document.getElementById('explanation-text').textContent = currentQuestions[idx].exp || 'No explanation provided.';
+            document.getElementById('explanation-content').innerHTML = `<strong>💡 Explanation:</strong> ${q.exp || q.explanation || 'No explanation provided.'}`;
 
-            if (currentMode === 'standard' || currentMode === 'exam') {
+            if (currentMode !== 'beginner') {
                 nextQuestionTimeout = setTimeout(() => {
                     if (idx < currentQuestions.length - 1) {
                         currentQuestionIndex++;
@@ -1267,181 +1397,82 @@
         }
 
         function handleTheoryAnswer(idx, answer) {
-            if (!answer.trim()) {
-                alert('⚠️ Please type your answer before submitting.');
-                return;
-            }
-
+            if (!answer.trim()) return alert('⚠️ Answer canvas field cannot process empty values.');
             userAnswers[idx] = answer;
+            score++; 
             
-            // For theory questions, we'll assign a placeholder score
-            // In production, you might want to implement keyword matching
-            const q = currentQuestions[idx];
-            let theoryScore = 0;
-            
-            // Simple keyword matching (basic implementation)
-            if (q.keywords && q.keywords.length > 0) {
-                const answerLower = answer.toLowerCase();
-                const matchedKeywords = q.keywords.filter(k => answerLower.includes(k.toLowerCase()));
-                theoryScore = Math.round((matchedKeywords.length / q.keywords.length) * 100);
-            } else {
-                theoryScore = 70; // Default score if no keywords
-            }
-
-            // Update score (theory questions count as 1 point)
-            if (theoryScore >= 50) score++;
             document.getElementById('live-score').textContent = score;
-            // Show explanation and sample answer
-            document.getElementById('explanation-box').style.display = 'block';
-            document.getElementById('explanation-text').innerHTML = `
-                <strong>Your Answer:</strong> ${answer}<br><br>
-                <strong>Sample Answer:</strong> ${q.sampleAnswer || 'No sample answer provided.'}<br><br>
-                <strong>Score:</strong> ${theoryScore}%
-            `;
-
-            if (isSoundEnabled) {
-                if (theoryScore >= 50) {
-                    playTone(880, 0.1);
-                    setTimeout(() => playTone(1100, 0.1), 100);
-                    showFeedbackOverlay(true);
-                } else {
-                    playTone(200, 0.2);
-                    showFeedbackOverlay(false);
-                }
-            }
-
-            // Auto-advance after delay
-            if (currentMode !== 'foundation') {
-                nextQuestionTimeout = setTimeout(() => {
-                    if (idx < currentQuestions.length - 1) {
-                        currentQuestionIndex++;
-                        loadQuestion(currentQuestionIndex);
-                        if (timePerQuestion > 0) {
-                            timeLeft = timePerQuestion;
-                            startTimer();
-                        }
-                    } else {
-                        finishExam(false);
-                    }
-                }, 5000);
-            }
+            loadQuestion(idx);
         }
 
-        // ==========================================
-        // 🔊 SPEECH FUNCTIONS
-        // ==========================================
+        function showFeedbackOverlay(isCorrect) {
+            const overlay = document.getElementById('feedback-overlay');
+            overlay.style.display = 'block';
+            overlay.style.opacity = '1';
+            
+            if (isCorrect) {
+                const msg = positiveMessages[Math.floor(Math.random() * positiveMessages.length)];
+                overlay.textContent = msg;
+                overlay.style.color = 'var(--success)';
+                overlay.className = 'anim-pop';
+                if (isSoundEnabled) speak(msg);
+            } else {
+                const msg = negativeMessages[Math.floor(Math.random() * negativeMessages.length)];
+                overlay.textContent = msg;
+                overlay.style.color = 'var(--danger)';
+                overlay.className = 'anim-shake';
+                if (isSoundEnabled) speak(msg);
+            }
+
+            setTimeout(() => {
+                overlay.style.opacity = '0';
+                setTimeout(() => { overlay.style.display = 'none'; }, 300);
+            }, 1500);
+        }
+
         function speak(text) {
             if (!isSoundEnabled || !window.speechSynthesis) return;
             window.speechSynthesis.cancel();
-            
-            setTimeout(() => {
-                const u = new SpeechSynthesisUtterance(text);
-                u.rate = 0.95;
-                window.speechSynthesis.speak(u);
-            }, 50);
+            const u = new SpeechSynthesisUtterance(text);
+            u.rate = 1.0;
+            window.speechSynthesis.speak(u);
         }
+
         function speakQuestion(q) {
-            if (!isSoundEnabled || !window.speechSynthesis) return;
-            window.speechSynthesis.cancel();
-
-            setTimeout(() => {
-                const questionUtterance = new SpeechSynthesisUtterance(q.q);
-                questionUtterance.rate = 0.9;
-
-                questionUtterance.onend = function() {
-                    let optionIndex = 0;
-                    function speakNextOption() {
-                        if (optionIndex >= q.options.length || userAnswers[currentQuestionIndex] !== undefined) return;
-                        const letter = String.fromCharCode(65 + optionIndex);
-                        const optionText = `Option ${letter}: ${q.options[optionIndex]}`;
-                        const optionUtterance = new SpeechSynthesisUtterance(optionText);
-                        optionUtterance.rate = 0.9;
-                        optionUtterance.onend = function() {
-                            optionIndex++;
-                            setTimeout(speakNextOption, 300);
-                        };
-                        window.speechSynthesis.speak(optionUtterance);
-                    }
-                    speakNextOption();
-                };
-                window.speechSynthesis.speak(questionUtterance);
-            }, 50);
+            let txt = q.q || q.question || "";
+            if(q.options && q.options.length > 0) {
+                txt += ". Options are: ";
+                q.options.forEach((o, i) => {
+                    txt += ` Option ${String.fromCharCode(65 + i)}, ${o}. `;
+                });
+            }
+            speak(txt);
         }
 
         function replayCurrentQuestion() {
-            if (currentQuestions.length > 0) {
+            if (currentQuestions[currentQuestionIndex]) {
                 speakQuestion(currentQuestions[currentQuestionIndex]);
             }
         }
 
-        function playTone(frequency, duration) {
-            if (!isSoundEnabled) return;
-            try {
-                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                const oscillator = audioCtx.createOscillator();
-                const gainNode = audioCtx.createGain();
-                oscillator.connect(gainNode);
-                gainNode.connect(audioCtx.destination);
-                oscillator.frequency.value = frequency;
-                oscillator.type = 'sine';
-                gainNode.gain.value = 0.1;
-                oscillator.start();
-                setTimeout(() => { oscillator.stop(); audioCtx.close(); }, duration * 1000);
-            } catch (e) {}
-        }
-        function showFeedbackOverlay(isCorrect) {
-            const overlay = document.getElementById('feedback-overlay');
-            let msg = "", color = "";
-
-            if (isCorrect) {
-                msg = positiveMessages[Math.floor(Math.random() * positiveMessages.length)];
-                color = "#2e7d32";
-                overlay.className = "anim-pop";
-            } else {
-                msg = negativeMessages[Math.floor(Math.random() * negativeMessages.length)];
-                color = "#c62828";
-                overlay.className = "anim-shake";
-            }
-
-            overlay.textContent = msg;
-            overlay.style.color = color;
-            overlay.style.display = "flex";
-            overlay.style.opacity = "1";
-
-            if (isSoundEnabled) speak(msg);
-            
-            setTimeout(() => { 
-                overlay.style.opacity = "0"; 
-                setTimeout(() => {
-                    if(overlay.style.opacity === "0") {
-                        overlay.style.display = "none";
-                        overlay.textContent = "";
-                        overlay.className = "";
-                    }
-                }, 300);
-            }, 1500);
-        }
-
-        // ==========================================
-        // 🧭 NAVIGATION
-        // ==========================================
-        function nextQuestion() {
-            if (currentQuestionIndex < currentQuestions.length - 1) {
-                if (nextQuestionTimeout) { clearTimeout(nextQuestionTimeout); nextQuestionTimeout = null; }
-                currentQuestionIndex++;
+        function prevQuestion() {
+            if (currentQuestionIndex > 0) {
+                if (nextQuestionTimeout) clearTimeout(nextQuestionTimeout);
+                currentQuestionIndex--;
                 loadQuestion(currentQuestionIndex);
-                if (timePerQuestion > 0 && userAnswers[currentQuestionIndex] === undefined) {
+                if (timePerQuestion > 0) {
                     timeLeft = timePerQuestion;
                     startTimer();
                 }
             }
         }
 
-        function prevQuestion() {
-            if (currentQuestionIndex > 0) {                if (nextQuestionTimeout) { clearTimeout(nextQuestionTimeout); nextQuestionTimeout = null; }
-                currentQuestionIndex--;
+        function nextQuestion() {
+            if (currentQuestionIndex < currentQuestions.length - 1) {
+                if (nextQuestionTimeout) clearTimeout(nextQuestionTimeout);
+                currentQuestionIndex++;
                 loadQuestion(currentQuestionIndex);
-                if (timePerQuestion > 0 && userAnswers[currentQuestionIndex] === undefined) {
+                if (timePerQuestion > 0) {
                     timeLeft = timePerQuestion;
                     startTimer();
                 }
@@ -1449,83 +1480,73 @@
         }
 
         function confirmQuitExam() {
-            if(confirm("Are you sure you want to quit this exam? Your progress will be saved.")) {
-                finishExam(true);
+            if (confirm("🚪 Are you sure you want to terminate this exam process? Progress won't be saved.")) {
+                showSection('dashboard-section');
+                loadDashboard();
             }
         }
 
-        // ==========================================
-        // 🎉 SUBMIT & SAVE RESULTS
-        // ==========================================
-        async function finishExam(manual) {
+        async function finishExam(isManualSubmit) {
+            if (isManualSubmit && !confirm("✅ Are you sure you want to finish and submit your exam answers?")) return;
+            
             clearInterval(timerInterval);
-            if (nextQuestionTimeout) { clearTimeout(nextQuestionTimeout); nextQuestionTimeout = null; }
+            if (nextQuestionTimeout) clearTimeout(nextQuestionTimeout);
             window.speechSynthesis?.cancel();
 
-            const timeUsed = Math.floor((Date.now() - examStartTime) / 1000);
-            const mins = Math.floor(timeUsed / 60);
-            const secs = timeUsed % 60;
+            const durationSecNode = Math.floor((Date.now() - examStartTime) / 1000);
+            const displayMin = Math.floor(durationSecNode / 60).toString().padStart(2, '0');
+            const displaySec = (durationSecNode % 60).toString().padStart(2, '0');
+            const timeUsedStr = `${displayMin}:${displaySec}`;
 
-            const total = currentQuestions.length;
-            const percentage = Math.round((score / total) * 100);
+            const totalQ = currentQuestions.length;
+            const pctScore = totalQ > 0 ? Math.round((score / totalQ) * 100) : 0;
 
-            try {
-                await addDoc(collection(window.db, "results"), {
-                    user: currentUser.accessId,
-                    subjectId: currentSubject.id,
-                    subjectName: currentSubject.name,
-                    mode: currentMode,
-                    score: `${score}/${total}`,
-                    percentage: percentage,
-                    date: new Date()
-                });
-            } catch (e) {
-                console.error('Error saving result:', e);
-            }
-
-            document.getElementById('final-score').textContent = `${score}/${total}`;
-            document.getElementById('percentage').textContent = `${percentage}%`;
+            document.getElementById('final-score').textContent = `${score} / ${totalQ}`;
+            document.getElementById('percentage').textContent = `${pctScore}%`;
             document.getElementById('correct-count').textContent = score;
-            document.getElementById('wrong-count').textContent = total - score;
-            document.getElementById('time-used').textContent = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-            let grade = "", msg = "", gradeClass = "";
-            if (currentMode === 'exam') {
-                if (percentage >= 80) { grade = "Excellence"; msg = "🌟 Outstanding! Ready for real exam!"; gradeClass = "grade-excellence"; }
-                else if (percentage >= 70) { grade = "Better"; msg = "👍 Great job! More practice to excel."; gradeClass = "grade-good"; }
-                else if (percentage >= 50) { grade = "Good"; msg = "✅ Passed! Review weak areas."; gradeClass = "grade-good"; }
-                else { grade = "Fair"; msg = "📚 Keep studying! You'll improve."; gradeClass = "grade-fair"; }
-            } else {
-                if (percentage >= 70) { grade = "Excellent"; msg = "🎉 Fantastic work!"; gradeClass = "grade-excellence"; }
-                else if (percentage >= 50) { grade = "Good"; msg = "👍 Well done!"; gradeClass = "grade-good"; }
-                else { grade = "Needs Practice"; msg = "💪 Don't give up! Try again."; gradeClass = "grade-fair"; }
-            }
+            document.getElementById('wrong-count').textContent = totalQ - score;
+            document.getElementById('time-used').textContent = timeUsedStr;
 
-            const gradeEl = document.getElementById('grade-display');
-            gradeEl.textContent = grade;
-            gradeEl.className = `grade-badge ${gradeClass}`;
-            document.getElementById('feedback-msg').textContent = msg;
+            const badge = document.getElementById('grade-display');
+            const feedbackTextNode = document.getElementById('feedback-msg');
+
+            if (pctScore >= 75) {
+                badge.textContent = "🏆 EXCELLENCE";
+                badge.className = "grade-badge grade-excellence";
+                feedbackTextNode.textContent = "Spectacular performance! You are reading perfectly ahead of your peers.";
+            } else if (pctScore >= 45) {
+                badge.textContent = "👍 GOOD PASS";
+                badge.className = "grade-badge grade-good";
+                feedbackTextNode.textContent = "Great job! Keep refining your weaknesses to secure high alpha grades.";
+            } else {
+                badge.textContent = "⚠️ NEEDS IMPROVEMENT";
+                badge.className = "grade-badge grade-fair";
+                feedbackTextNode.textContent = "Don't sweat it. Review the problem explanations and take the trial runs again.";
+            }
 
             showSection('result-section');
 
             if (isSoundEnabled) {
-                speak(`Exam completed. Your score is ${score} out of ${total}. Your grade is ${grade}.`);
+                speak(`Exam completed. You scored ${score} out of ${totalQ}.`);
+            }
+
+            try {
+                await addDocRef(getCollectionRef(window.db, "results"), {
+                    user: currentUser.accessId,
+                    studentName: currentUser.fullName || "Student",
+                    subjectId: currentSubject.id,
+                    subjectName: currentSubject.name,
+                    score: score,
+                    totalQuestions: totalQ,
+                    percentage: pctScore,
+                    timeUsed: timeUsedStr,
+                    mode: `${selectedCategoryMode}-${currentMode}`,
+                    timestamp: new Date()
+                });
+            } catch (e) {
+                console.error("Error logging exam outcome:", e);
             }
         }
-
-        // ==========================================
-        // 🚀 INITIALIZATION
-        // ==========================================
-        document.addEventListener('DOMContentLoaded', async () => {
-            // Initialize speech synthesis on first user interaction
-            document.addEventListener('click', function initSpeech() {
-                if (window.speechSynthesis && !window.speechSynthesis.pending) {
-                    const t = new SpeechSynthesisUtterance('');
-                    window.speechSynthesis.speak(t);
-                    window.speechSynthesis.cancel();
-                }
-                document.removeEventListener('click', initSpeech);
-            }, { once: true });
-        });
     </script>
 </body>
 </html>

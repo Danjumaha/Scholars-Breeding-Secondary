@@ -7,7 +7,7 @@
     
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, updateDoc, query, where, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, updateDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyCA2OAE_5ai1tXEObm_WGvkYU-oN8p0y1I",
@@ -21,7 +21,7 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
         window.db = db;
-        window.firestoreFns = { collection, addDoc, getDocs, deleteDoc, doc, updateDoc, query, where, orderBy, limit };
+        window.firestoreFns = { collection, addDoc, getDocs, deleteDoc, doc, updateDoc, onSnapshot };
     </script>
 
     <style>
@@ -73,7 +73,7 @@
         .card { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 20px; }
         .card h3 { margin-bottom: 15px; color: var(--primary); }
 
-        .controls-row { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+        .controls-row { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; align-items: center; }
         .search-box { flex: 1; min-width: 200px; position: relative; }
         .search-box input { width: 100%; padding: 12px 15px 12px 40px; border: 2px solid var(--border-color); border-radius: 10px; font-size: 0.95rem; }
         .search-box input:focus { border-color: var(--primary); outline: none; }
@@ -94,18 +94,14 @@
         .filter-item select:focus, .filter-item input:focus { border-color: var(--primary); outline: none; }
         .filter-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 10px; }
 
-        .data-table { width: 100%; border-collapse: collapse; background: white; }
-        .data-table th { background: var(--light); padding: 12px; text-align: left; font-size: 0.85rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; }
-        .data-table td { padding: 12px; border-bottom: 1px solid var(--border-color); font-size: 0.9rem; }
-        .data-table tr:hover { background: #f9fafb; }
-        .user-list, .question-list { max-height: 500px; overflow-y: auto; }
+        .user-list, .question-list { max-height: 500px; overflow-y: auto; padding-right: 5px; }
         .list-item { background: white; padding: 15px; margin-bottom: 10px; border-radius: 10px; border: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
         .list-item:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
         .item-info { flex: 1; min-width: 200px; }
         .item-info .main-text { font-weight: bold; color: var(--text-primary); margin-bottom: 3px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
         .item-info .sub-text { font-size: 0.8rem; color: var(--text-secondary); line-height: 1.4; margin-top: 5px; }
         .item-actions { display: flex; gap: 5px; flex-wrap: wrap; align-items: center; }
-        .status-badge { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 0.75rem; font-weight: bold; }
+        .status-badge { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 0.75rem; font-weight: bold; text-transform: capitalize; }
         .status-active { background: #c6f6d5; color: #22543d; } .status-archived { background: #fed7d7; color: #742a2a; } .status-paused { background: #feebc8; color: #744210; }
 
         .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 15px; }
@@ -128,7 +124,7 @@
         .modal-overlay.active { display: flex; }
         .modal { background: white; padding: 30px; border-radius: 15px; max-width: 500px; width: 100%; max-height: 90vh; overflow-y: auto; }
         .modal h3 { color: var(--danger); margin-bottom: 15px; }
-        .modal p { margin-bottom: 20px; color: var(--text-secondary); }
+        .modal p { margin-bottom: 20px; color: var(--text-secondary); font-size: 0.95rem; line-height: 1.5; }
         .modal-actions { display: flex; gap: 10px; justify-content: flex-end; }
 
         .mode-badge { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 0.75rem; font-weight: bold; }
@@ -286,7 +282,7 @@
                         <label>Question Image (Optional)</label>
                         <div class="image-upload-box" onclick="document.getElementById('q-image-input').click()">
                             <input type="file" id="q-image-input" accept="image/*" onclick="event.stopPropagation()" onchange="handleImageUpload(this, 'q-image-preview', 'q-image-url', 'q-image-upload-text')">
-                            <div id="q-image-upload-text">📁 Click to upload image</div>
+                            <div id="q-image-upload-text" class="upload-hint">📁 Click to upload image</div>
                             <img id="q-image-preview" class="image-preview" style="display:none;">
                             <input type="hidden" id="q-image-url">
                         </div>
@@ -332,7 +328,7 @@
                         <label>Explanation Image (Optional)</label>
                         <div class="image-upload-box" onclick="document.getElementById('exp-image-input').click()">
                             <input type="file" id="exp-image-input" accept="image/*" onclick="event.stopPropagation()" onchange="handleImageUpload(this, 'exp-image-preview', 'exp-image-url', 'exp-image-upload-text')">
-                            <div id="exp-image-upload-text">📁 Click to upload explanation image</div>
+                            <div id="exp-image-upload-text" class="upload-hint">📁 Click to upload explanation image</div>
                             <img id="exp-image-preview" class="image-preview" style="display:none;">
                             <input type="hidden" id="exp-image-url">
                         </div>
@@ -416,6 +412,7 @@
                     <h3>👥 All Registered Users</h3>
                     <div class="controls-row">
                         <div class="search-box"><span class="search-icon">🔍</span><input type="text" id="user-search" placeholder="Search by ID, name, email..." oninput="filterUsers()"></div>
+                        <button class="btn btn-danger" onclick="confirmDeleteAllUsers()">🗑️ Delete All Users</button>
                     </div>
                     <p style="color: var(--text-secondary); margin-bottom: 15px; font-size: 0.9rem;">Showing <strong id="user-count">0</strong> users</p>
                     <div id="users-list" class="user-list"><p style="color: var(--text-secondary);">Loading users...</p></div>
@@ -429,7 +426,10 @@
                     <div class="stat-card"><div class="stat-label">💵 Average per User</div><div class="stat-value" id="rev-avg">₦0</div></div>
                 </div>
                 <div class="card">
-                    <h3>💳 Transaction History</h3>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; flex-wrap: wrap; gap: 10px;">
+                        <h3>💳 Transaction History</h3>
+                        <button class="btn btn-danger btn-sm" onclick="confirmDeleteAllTransactions()">🗑️ Delete All Transactions</button>
+                    </div>
                     <div id="transactions-list"><p style="color: var(--text-secondary);">Loading...</p></div>
                 </div>
             </div>
@@ -452,22 +452,73 @@
         
         let isAdminLoggedIn = false;
         let allSubjects = [], allQuestions = [], allUsers = [];
+        let unsubUsers = null, unsubSubjects = null, unsubQuestions = null;
 
         function adminLogin() {
             if (document.getElementById('admin-password').value === ADMIN_PASSWORD) {                
                 isAdminLoggedIn = true;
                 document.getElementById('admin-login').style.display = 'none';
                 document.getElementById('admin-dashboard').classList.add('active');
-                loadDashboardData();
+                initRealtimeListeners();
             } else alert('❌ Wrong password!');
         }
+
         function adminLogout() {
             if (!confirm('Logout?')) return;
             isAdminLoggedIn = false;
+            
+            if(unsubUsers) unsubUsers();
+            if(unsubSubjects) unsubSubjects();
+            if(unsubQuestions) unsubQuestions();
+
             document.getElementById('admin-dashboard').classList.remove('active');
             document.getElementById('admin-login').style.display = 'flex';
             document.getElementById('admin-password').value = '';
         }
+
+        function initRealtimeListeners() {
+            unsubUsers = window.firestoreFns.onSnapshot(window.firestoreFns.collection(window.db, "registrations"), (snapshot) => {
+                allUsers = [];
+                snapshot.forEach(d => allUsers.push({ id: d.id, ...d.data() }));
+                allUsers.sort((a, b) => (b.createdAt?.toDate?.() || 0) - (a.createdAt?.toDate?.() || 0));
+                updateMetricsAndLists();
+            }, (error) => console.error("Users listener structural error:", error));
+
+            unsubSubjects = window.firestoreFns.onSnapshot(window.firestoreFns.collection(window.db, "subjects"), (snapshot) => {
+                allSubjects = [];
+                snapshot.forEach(d => allSubjects.push({ id: d.id, ...d.data() }));
+                populateSubjectDropdowns();
+                renderSubjects(allSubjects);
+                updateMetricsAndLists();
+            }, (error) => console.error("Subjects listener structural error:", error));
+
+            unsubQuestions = window.firestoreFns.onSnapshot(window.firestoreFns.collection(window.db, "questions"), (snapshot) => {
+                allQuestions = [];
+                snapshot.forEach(d => allQuestions.push({ id: d.id, ...d.data() }));
+                document.getElementById('q-total-count').textContent = allQuestions.length;
+                filterQuestions();
+                updateMetricsAndLists();
+            }, (error) => console.error("Questions listener structural error:", error));
+        }
+
+        function updateMetricsAndLists() {
+            document.getElementById('stat-users').textContent = allUsers.length;
+            document.getElementById('stat-subjects').textContent = allSubjects.length;
+            document.getElementById('stat-questions').textContent = allQuestions.length;
+            
+            const paidUsers = allUsers.filter(u => (u.amountPaid || 0) > 0);
+            const totalRev = paidUsers.reduce((sum, u) => sum + (parseInt(u.amountPaid) || 0), 0);
+            
+            document.getElementById('stat-revenue').textContent = '₦' + totalRev.toLocaleString();
+            
+            const recent = [...allUsers].slice(0, 5);
+            document.getElementById('recent-registrations').innerHTML = recent.length === 0 ? '<p style="color: var(--text-secondary);">No registrations yet</p>' :
+                recent.map(u => `<div class="list-item"><div class="item-info"><div class="main-text">🆔 ${u.accessId || 'N/A'}</div><div class="sub-text">${u.fullName || 'N/A'} • ${u.examType || 'N/A'} • ${u.subjects?.length || 0} subjects • ${u.createdAt?.toDate?.().toLocaleDateString() || 'N/A'}</div></div><span class="status-badge status-${u.status || 'active'}">${u.status || 'active'}</span></div>`).join('');
+
+            if (document.getElementById('section-users').classList.contains('active')) renderUsers(allUsers);
+            if (document.getElementById('section-revenue').classList.contains('active')) renderRevenue();
+        }
+
         function showSection(sectionName) {
             document.querySelectorAll('.section-page').forEach(s => s.classList.remove('active'));
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));            
@@ -486,48 +537,14 @@
                 revenue: '💰 Revenue & Transactions' 
             };
             document.getElementById('page-title').textContent = titles[sectionName];
-            if (sectionName === 'dashboard') loadDashboardData();
-            if (sectionName === 'subjects') loadSubjects();
-            if (sectionName === 'questions') loadQuestionsSection();
-            if (sectionName === 'users') loadUsers();
-            if (sectionName === 'revenue') loadRevenue();
-        }
-
-        async function loadDashboardData() {
-            try {
-                const usersSnap = await window.firestoreFns.getDocs(window.firestoreFns.collection(window.db, "registrations"));
-                allUsers = []; usersSnap.forEach(d => allUsers.push({ id: d.id, ...d.data() }));
-                document.getElementById('stat-users').textContent = allUsers.length;
-                
-                const paidUsers = allUsers.filter(u => (u.amountPaid || 0) > 0);
-                document.getElementById('stat-revenue').textContent = '₦' + paidUsers.reduce((sum, u) => sum + (parseInt(u.amountPaid) || 0), 0).toLocaleString();
-                
-                const subjectsSnap = await window.firestoreFns.getDocs(window.firestoreFns.collection(window.db, "subjects"));                
-                allSubjects = []; subjectsSnap.forEach(d => allSubjects.push({ id: d.id, ...d.data() }));
-                document.getElementById('stat-subjects').textContent = allSubjects.length;
-                
-                const qSnap = await window.firestoreFns.getDocs(window.firestoreFns.collection(window.db, "questions"));
-                document.getElementById('stat-questions').textContent = qSnap.size;
-                
-                const recent = [...allUsers].sort((a, b) => (b.createdAt?.toDate?.() || 0) - (a.createdAt?.toDate?.() || 0)).slice(0, 5);
-                document.getElementById('recent-registrations').innerHTML = recent.length === 0 ? '<p style="color: var(--text-secondary);">No registrations yet</p>' :
-                    recent.map(u => `<div class="list-item"><div class="item-info"><div class="main-text">🆔 ${u.accessId}</div><div class="sub-text">${u.fullName || 'N/A'} • ${u.examType || 'N/A'} • ${u.subjects?.length || 0} subjects • ${u.createdAt?.toDate?.().toLocaleDateString() || 'N/A'}</div></div><span class="status-badge status-active">${u.status || 'active'}</span></div>`).join('');
-            } catch (e) { console.error(e); }
-        }
-
-        async function loadSubjects() {
-            const container = document.getElementById('subjects-list');
-            container.innerHTML = '<p>Loading...</p>';
-            try {
-                const snap = await window.firestoreFns.getDocs(window.firestoreFns.collection(window.db, "subjects"));
-                allSubjects = []; snap.forEach(d => allSubjects.push({ id: d.id, ...d.data() }));
-                renderSubjects(allSubjects);
-                populateSubjectDropdowns();
-            } catch (e) { container.innerHTML = '<p style="color: var(--danger);">Error loading subjects</p>'; }
+            updateMetricsAndLists();
+            if (sectionName === 'subjects') renderSubjects(allSubjects);
+            if (sectionName === 'questions') filterQuestions();
         }
 
         function renderSubjects(subjects) {
             const container = document.getElementById('subjects-list');
+            if (!container) return;
             if (subjects.length === 0) { container.innerHTML = '<p style="text-align:center;padding:30px;">No subjects</p>'; return; }
             container.innerHTML = subjects.map(s => `<div class="list-item"><div class="item-info"><div class="main-text">📚 ${s.name}</div></div><div class="item-actions"><button class="btn btn-primary btn-sm" onclick="editSubject('${s.id}', '${s.name}')">✏️ Edit</button><button class="btn btn-danger btn-sm" onclick="confirmDeleteSubject('${s.id}', '${s.name}')">🗑️ Delete</button></div></div>`).join('');
         }
@@ -552,7 +569,6 @@
                 document.getElementById('subject-name').value = '';                
                 document.getElementById('edit-subject-id').value = '';
                 document.getElementById('save-subject-btn').textContent = '➕ Add Subject';
-                loadSubjects();
             } catch (e) { alert('❌ Error: ' + e.message); }
         }
 
@@ -566,7 +582,6 @@
             showModal('🗑️ Delete Subject', `Delete "${name}"? This cannot be undone.`, async () => {
                 try {
                     await window.firestoreFns.deleteDoc(window.firestoreFns.doc(window.db, "subjects", id));
-                    loadSubjects();
                 } catch(e) { alert('Error deleting subject'); }
                 closeModal();
             });
@@ -587,11 +602,6 @@
                 });
                 if(curr) sel.value = curr;
             });
-        }
-
-        async function loadQuestionsSection() {
-            await loadSubjects();
-            await loadQuestions();
         }
 
         function toggleTheoryFields() {
@@ -621,49 +631,21 @@
             statusEl.textContent = '⏳ Uploading to Cloudinary Repository...';
             statusEl.className = 'upload-status loading';
 
-            console.clear();
-            console.log("%c🚀 Cloudinary Secure Gateway Dispatch Initiated...", "color: #fff; background: #764ba2; padding: 6px; font-weight: bold;");
-            console.log("📁 Metadata Check:", { name: file.name, size: file.size, type: file.type });
-
             try {
                 const formData = new FormData();
                 formData.append('file', file);
-                // Assigning targeted preset matching user credential schema requirements
                 formData.append('upload_preset', 'breeding'); 
                 formData.append('api_key', '289463516256512');
 
                 const cloudName = 'pocket_hizab';
                 const uploadUrl = `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`;
-                
-                console.log(`📡 Endpoint Target Address: ${uploadUrl}`);
 
-                const response = await fetch(uploadUrl, {
-                    method: 'POST',
-                    body: formData
-                });
+                const response = await fetch(uploadUrl, { method: 'POST', body: formData });
+                const data = await response.json();
 
-                console.log(`📊 Response Network Status Flag: ${response.status} (${response.statusText})`);
-
-                const rawResponseText = await response.text();
-                let data = {};
-                try {
-                    data = JSON.parse(rawResponseText);
-                } catch(e) {
-                    console.error("❌ Raw payload output read failure (Non-JSON stream detected):", rawResponseText);
-                    throw new Error(`Server connection terminated cleanly but output rejected JSON parsing routines. Stream status: ${response.status}`);
-                }
-
-                if (!response.ok) {
-                    console.log("%c❌ CLOUDINARY API ERROR HIGHLIGHTS", "color: white; background: #f56565; padding: 4px; font-weight: bold;");
-                    console.dir(data);
-                    const failureReason = data.error?.message || `Cloudinary structural validation error. Code: ${response.status}`;
-                    throw new Error(failureReason);
-                }
+                if (!response.ok) throw new Error(data.error?.message || 'Cloudinary internal processing failure.');
 
                 if (data.secure_url) {
-                    console.log("%c✅ CLOUDINARY FILE SAVE VERIFIED!", "color: white; background: #48bb78; padding: 4px; font-weight: bold;");
-                    console.log("🔗 Asset Destination Link:", data.secure_url);
-                    
                     const preview = document.getElementById(previewId);
                     preview.src = data.secure_url;
                     preview.style.display = 'block';
@@ -671,26 +653,13 @@
                     statusEl.textContent = '✅ Image linked and saved successfully!';
                     statusEl.className = 'upload-status success';
                 } else {
-                    throw new Error('Cloudinary parameters parsed as healthy, but storage secure_url reference key was missing inside output payload object context.');
+                    throw new Error('Storage safe resource URL reference context parsing failure.');
                 }
-
             } catch (error) {
-                console.log("%c🛑 CRITICAL UPLOAD RUNTIME HANDLING EXCEPTION", "color: #ffeb3b; background: #000; padding: 4px; font-weight: bold;");
                 console.error(error);
                 statusEl.textContent = '❌ Upload Failed: ' + error.message;
                 statusEl.className = 'upload-status error';
             }
-        }
-
-        async function loadQuestions() {
-            const container = document.getElementById('questions-list');
-            container.innerHTML = '<p>Loading...</p>';
-            try {
-                const snap = await window.firestoreFns.getDocs(window.firestoreFns.collection(window.db, "questions"));
-                allQuestions = []; snap.forEach(d => allQuestions.push({ id: d.id, ...d.data() }));
-                document.getElementById('q-total-count').textContent = allQuestions.length;
-                filterQuestions();
-            } catch (e) { container.innerHTML = '<p style="color: var(--danger);">Error loading questions bank</p>'; }
         }
 
         function filterQuestions() {
@@ -710,7 +679,12 @@
             if (versionFilter) filtered = filtered.filter(q => String(q.version || '').toLowerCase().includes(versionFilter));
             if (statusFilter) filtered = filtered.filter(q => q.status === statusFilter);
             if (search) {
-                filtered = filtered.filter(q => (q.q || '').toLowerCase().includes(search) || (q.topic || '').toLowerCase().includes(search));
+                filtered = filtered.filter(q => 
+                    (q.q || '').toLowerCase().includes(search) || 
+                    (q.topic || '').toLowerCase().includes(search) ||
+                    (q.exp || '').toLowerCase().includes(search) ||
+                    (q.options && q.options.some(opt => opt.toLowerCase().includes(search)))
+                );
             }
 
             renderQuestions(filtered);
@@ -729,7 +703,8 @@
 
         function renderQuestions(questions) {            
             const container = document.getElementById('questions-list');
-            if (questions.length === 0) { container.innerHTML = '<p style="text-align:center;padding:30px;">No questions found match current rules</p>'; document.getElementById('q-filtered-info').style.display = 'none'; return; }
+            if (!container) return;
+            if (questions.length === 0) { container.innerHTML = '<p style="text-align:center;padding:30px;">No questions found matching current rules</p>'; document.getElementById('q-filtered-info').style.display = 'none'; return; }
             document.getElementById('q-filtered-info').style.display = questions.length !== allQuestions.length ? 'inline' : 'none';
             if(questions.length !== allQuestions.length) document.getElementById('q-filtered-num').textContent = questions.length;
             
@@ -777,7 +752,7 @@
             const questionImage = document.getElementById('q-image-url').value;
             const explanationImage = document.getElementById('exp-image-url').value;
 
-            if (!subjectId || !qText) return alert('⚠️ Required Parameters Missing (Subject selection and Question structural text are needed)');
+            if (!subjectId || !qText) return alert('⚠️ Required Parameters Missing (Subject selection and Question text are needed)');
 
             const data = {
                 subjectId,                
@@ -804,7 +779,7 @@
                 const answer = parseInt(document.getElementById('q-answer').value);
                 
                 if (!opts[0] || !opts[1] || !opts[2] || !opts[3]) {                    
-                    return alert('⚠️ Objective structure incomplete. Please define all four alternative option keys.');
+                    return alert('⚠️ Objective structure incomplete. Please define all four choices.');
                 }
                 
                 data.options = opts;
@@ -824,14 +799,13 @@
             try {
                 if (editId) {
                     await window.firestoreFns.updateDoc(window.firestoreFns.doc(window.db, "questions", editId), data);
-                    alert('✅ Question changes committed successfully!');
+                    alert('✅ Question changes saved successfully!');
                 } else {
                     data.createdAt = new Date();
                     await window.firestoreFns.addDoc(window.firestoreFns.collection(window.db, "questions"), data);
                     alert('✅ New question appended to bank securely!');
                 }
                 clearQuestionForm();
-                loadQuestions();
             } catch (e) { alert('❌ Database Operational Fault: ' + e.message); }
         }
 
@@ -892,11 +866,9 @@
         }
 
         function confirmDeleteQuestion(id) {
-            showModal('🗑️ Delete Question Record', 'Are you sure you want to permanently strip this question out of the collection? This operation is irreversible.', async () => {
+            showModal('🗑️ Delete Question Record', 'Are you sure you want to permanently delete this question? This operation is irreversible.', async () => {
                 try {
                     await window.firestoreFns.deleteDoc(window.firestoreFns.doc(window.db, "questions", id));
-                    alert('🗑️ Question removed from system storage successfully.');
-                    loadQuestions();
                 } catch(e) { 
                     alert('Error tracking removal routines: ' + e.message); 
                 }
@@ -924,16 +896,13 @@
             document.getElementById('q-image-url').value = '';
             document.getElementById('exp-image-url').value = '';
             
-            // Clear the actual input elements to allow re-uploading the same file
             document.getElementById('q-image-input').value = '';
             document.getElementById('exp-image-input').value = '';
             
             document.getElementById('q-image-preview').style.display = 'none';
             document.getElementById('exp-image-preview').style.display = 'none';
             document.getElementById('q-image-upload-text').textContent = '📁 Click to upload image';
-            document.getElementById('q-image-upload-text').className = 'upload-hint';
             document.getElementById('exp-image-upload-text').textContent = '📁 Click to upload explanation image';
-            document.getElementById('exp-image-upload-text').className = 'upload-hint';
             
             toggleTheoryFields();
             document.getElementById('save-q-btn').textContent = '💾 Save Question';
@@ -944,41 +913,31 @@
             const newStatus = currentStatus === 'active' ? 'archived' : 'active';
             try {
                 await window.firestoreFns.updateDoc(window.firestoreFns.doc(window.db, "questions", id), { status: newStatus });
-                loadQuestions();
             } catch(e) { alert('Error modifying status visibility state'); }
-        }
-
-        async function loadUsers() {
-            const container = document.getElementById('users-list');
-            container.innerHTML = '<p>Loading database profiles...</p>';
-            try {
-                const snap = await window.firestoreFns.getDocs(window.firestoreFns.collection(window.db, "registrations"));
-                allUsers = []; snap.forEach(d => allUsers.push({ id: d.id, ...d.data() }));                
-                allUsers.sort((a, b) => (b.createdAt?.toDate?.() || 0) - (a.createdAt?.toDate?.() || 0));
-                document.getElementById('user-count').textContent = allUsers.length;
-                renderUsers(allUsers);
-            } catch (e) { container.innerHTML = '<p style="color: var(--danger);">Error loading users dataset</p>'; }
         }
 
         function renderUsers(users) {
             const container = document.getElementById('users-list');
+            if (!container) return;
+            document.getElementById('user-count').textContent = users.length;
             if (users.length === 0) { container.innerHTML = '<p style="text-align:center;padding:30px;">No registered identities found</p>'; return; }
             container.innerHTML = users.map(u => {
                 const subjects = u.subjects?.map(s => s.name).join(', ') || 'None';
                 const expDate = u.expirationDate?.toDate ? u.expirationDate.toDate().toLocaleDateString() : 'N/A';
                 return `<div class="list-item">
                     <div class="item-info">
-                        <div class="main-text">🆔 System Access Key ID: ${u.accessId || 'N/A'}</div>
+                        <div class="main-text">🆔 Access Key: ${u.accessId || 'N/A'}</div>
                         <div class="sub-text">
                             👤 Full Name: ${u.fullName || 'N/A'} | 📧 Contact Email: ${u.email || 'N/A'}<br>
-                            📋 Exam Class Category: ${u.examType || 'N/A'} | Subjects Selected: [ ${subjects} ]<br>
-                            💰 Paid Inbound: ₦${(parseInt(u.amountPaid) || 0).toLocaleString()} | 📅 Subscription Term Expiry: ${expDate}<br>
-                            📱 Device Protection Lock state: ${u.deviceBound ? 'Bound/Locked' : 'Open / Unbound'}
+                            📋 Exam Category: ${u.examType || 'N/A'} | Subjects: [ ${subjects} ]<br>
+                            💰 Paid Inbound: ₦${(parseInt(u.amountPaid) || 0).toLocaleString()} | 📅 Expiry: ${expDate}<br>
+                            📱 Device Locked: ${u.deviceBound ? 'Bound/Locked' : 'Open / Unbound'}
                         </div>
                     </div>
                     <div class="item-actions">
                         <span class="status-badge status-${u.status || 'active'}">${u.status || 'active'}</span>
                         ${u.status === 'active' ? `<button class="btn btn-warning btn-sm" onclick="toggleUserStatus('${u.id}', 'paused')">⏸️ Pause</button>` : `<button class="btn btn-success btn-sm" onclick="toggleUserStatus('${u.id}', 'active')">▶️ Resume</button>`}
+                        <button class="btn btn-danger btn-sm" onclick="confirmDeleteUser('${u.id}', '${u.fullName || u.accessId}')">🗑️ Delete</button>
                     </div>
                 </div>`;
             }).join('');
@@ -992,49 +951,93 @@
         async function toggleUserStatus(id, status) {
             try {
                 await window.firestoreFns.updateDoc(window.firestoreFns.doc(window.db, "registrations", id), { status });
-                loadUsers();
             } catch(e) { alert('Error updating user access permissions'); }
         }
 
-        async function loadRevenue() {
-            try {
-                const snap = await window.firestoreFns.getDocs(window.firestoreFns.collection(window.db, "registrations"));
-                allUsers = []; snap.forEach(d => allUsers.push({ id: d.id, ...d.data() }));
-                const paidUsers = allUsers.filter(u => (u.amountPaid || 0) > 0)
-                                          .sort((a, b) => (b.createdAt?.toDate?.() || 0) - (a.createdAt?.toDate?.() || 0));
+        function confirmDeleteUser(id, label) {
+            showModal('🗑️ Delete User Profile', `Are you absolutely sure you want to permanently delete profile "${label}"? This action cannot be reversed.`, async () => {
+                try {
+                    await window.firestoreFns.deleteDoc(window.firestoreFns.doc(window.db, "registrations", id));
+                    alert('✅ Profile successfully dropped from system access listings.');
+                } catch(e) { alert('Error processing document removal routines: ' + e.message); }
+                closeModal();
+            });
+        }
 
-                const totalRevenue = paidUsers.reduce((sum, u) => sum + (parseInt(u.amountPaid) || 0), 0);                
-                document.getElementById('rev-total').textContent = '₦' + totalRevenue.toLocaleString();
-                document.getElementById('rev-transactions').textContent = paidUsers.length;
-                
-                const avgRevenue = paidUsers.length > 0 ? Math.round(totalRevenue / paidUsers.length) : 0;
-                document.getElementById('rev-avg').textContent = '₦' + avgRevenue.toLocaleString();
+        function confirmDeleteAllUsers() {
+            showModal('🚨 CRITICAL WARNING: Wipe All User ID Profiles', `Are you completely sure you want to destroy ALL ${allUsers.length} user registration accounts from database storage? This action is absolute and irreversible.`, async () => {
+                try {
+                    for (const user of allUsers) {
+                        await window.firestoreFns.deleteDoc(window.firestoreFns.doc(window.db, "registrations", user.id));
+                    }
+                    alert(`✅ Successfully flushed user database space completely.`);
+                } catch(e) { alert('Database Batch Exception error encountered: ' + e.message); }
+                closeModal();
+            });
+        }
 
-                const container = document.getElementById('transactions-list');
-                if (paidUsers.length === 0) {
-                    container.innerHTML = '<p style="color: var(--text-secondary);">No completed premium transactions logged</p>';
-                } else {
-                    container.innerHTML = paidUsers.map(u => `
-                        <div class="list-item">
-                            <div class="item-info">
-                                <div class="main-text">💰 Settlement Collected: ₦${(parseInt(u.amountPaid) || 0).toLocaleString()}</div>
-                                <div class="sub-text">Payer Name: ${u.fullName || 'N/A'} (🆔 Access ID: ${u.accessId || 'N/A'}) • Timestamp: ${u.createdAt?.toDate?.().toLocaleString() || 'N/A'}</div>
-                            </div>
-                            <span class="status-badge status-active">Success Verified</span>
+        function renderRevenue() {
+            const paidUsers = allUsers.filter(u => (u.amountPaid || 0) > 0);
+            const totalRevenue = paidUsers.reduce((sum, u) => sum + (parseInt(u.amountPaid) || 0), 0);                
+            
+            document.getElementById('rev-total').textContent = '₦' + totalRevenue.toLocaleString();
+            document.getElementById('rev-transactions').textContent = paidUsers.length;
+            
+            const avgRevenue = paidUsers.length > 0 ? Math.round(totalRevenue / paidUsers.length) : 0;
+            document.getElementById('rev-avg').textContent = '₦' + avgRevenue.toLocaleString();
+
+            const container = document.getElementById('transactions-list');
+            if (!container) return;
+            if (paidUsers.length === 0) {
+                container.innerHTML = '<p style="color: var(--text-secondary);">No completed premium transactions logged</p>';
+            } else {
+                container.innerHTML = paidUsers.map(u => `
+                    <div class="list-item">
+                        <div class="item-info">
+                            <div class="main-text">💰 Settlement Collected: ₦${(parseInt(u.amountPaid) || 0).toLocaleString()}</div>
+                            <div class="sub-text">Payer Name: ${u.fullName || 'N/A'} (🆔 Access ID: ${u.accessId || 'N/A'}) • Timestamp: ${u.createdAt?.toDate?.().toLocaleString() || 'N/A'}</div>
                         </div>
-                    `).join('');
-                }
-            } catch (e) { 
-                console.error(e); 
-                document.getElementById('transactions-list').innerHTML = '<p style="color: var(--danger);">Error rendering live payment data sheets</p>';
+                        <div class="item-actions">
+                            <span class="status-badge status-active">Success Verified</span>
+                            <button class="btn btn-danger btn-sm" onclick="confirmDeleteTransaction('${u.id}', '${u.fullName || u.accessId}')">🗑️ Delete</button>
+                        </div>
+                    </div>
+                `).join('');
             }
         }
 
-        function showModal(title, message, confirmCallback) {
+        function confirmDeleteTransaction(id, label) {
+            showModal('🗑️ Delete Transaction Ledger Record', `Are you sure you want to strip premium verification status away from payment entry owned by "${label}"?`, async () => {
+                try {
+                    await window.firestoreFns.updateDoc(window.firestoreFns.doc(window.db, "registrations", id), { amountPaid: 0 });
+                    alert('✅ Transaction value reference record set safely back to zero.');
+                } catch(e) { alert('Failed updating transaction matrix entries: ' + e.message); }
+                closeModal();
+            });
+        }
+
+        function confirmDeleteAllTransactions() {
+            const paidUsers = allUsers.filter(u => (u.amountPaid || 0) > 0);
+            showModal('🚨 CRITICAL ACTION: Clear Total Ledger Revenue Statements', `Are you sure you want to clean out payment attributes for ALL ${paidUsers.length} premium records?`, async () => {
+                try {
+                    for (const u of paidUsers) {
+                        await window.firestoreFns.updateDoc(window.firestoreFns.doc(window.db, "registrations", u.id), { amountPaid: 0 });
+                    }
+                    alert(`✅ Batch clear structural task successful.`);
+                } catch(e) { alert('Error handling batch updates: ' + e.message); }
+                closeModal();
+            });
+        }
+
+        function showModal(title, msg, onConfirm) {
             document.getElementById('modal-title').textContent = title;
-            document.getElementById('modal-message').textContent = message;
-            const confirmBtn = document.getElementById('modal-confirm-btn');
-            confirmBtn.onclick = confirmCallback;
+            document.getElementById('modal-message').textContent = msg;
+            const btn = document.getElementById('modal-confirm-btn');
+            
+            const newBtn = btn.cloneNode(true);
+            btn.parentNode.replaceChild(newBtn, btn);
+            
+            newBtn.addEventListener('click', onConfirm);
             document.getElementById('confirm-modal').classList.add('active');
         }
 
