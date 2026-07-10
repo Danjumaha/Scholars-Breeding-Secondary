@@ -337,6 +337,16 @@
             display: inline-block; 
             font-weight: 600;
         }
+        .mode-card .count-tag {
+            margin-top: 10px;
+            font-size: 0.8rem;
+            background: var(--primary);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 10px;
+            display: inline-block;
+            font-weight: bold;
+        }
 
         .exam-header {
             display: flex;
@@ -699,16 +709,19 @@
                     <div class="icon">🟢</div>
                     <div class="title">Foundation Mode</div>
                     <div class="desc">Simplified questions for beginners. Build your foundational base with core exam structures.</div>
+                    <div class="count-tag" id="mode-count-foundation">0 Questions</div>
                 </div>
                 <div class="mode-card" onclick="selectCategory('standard')">
                     <div class="icon">🔵</div>
                     <div class="title">Standard Mode</div>
                     <div class="desc">Normal curriculum guidelines difficulty. Mid-tier balanced assessment strategies.</div>
+                    <div class="count-tag" id="mode-count-standard">0 Questions</div>
                 </div>
                 <div class="mode-card" onclick="selectCategory('exam')">
                     <div class="icon">🔴</div>
                     <div class="title">Exam Mode</div>
                     <div class="desc">Full complete examination structural difficulty modeled from real timed assessment papers.</div>
+                    <div class="count-tag" id="mode-count-exam">0 Questions</div>
                 </div>
             </div>
             <button onclick="showSection('dashboard-section')" class="secondary">← Back to Dashboard</button>
@@ -840,6 +853,8 @@
         let userAnswers = {};
         let nextQuestionTimeout = null;
         let userSubjects = [];
+        
+        let categoryCounts = { foundation: 0, standard: 0, exam: 0 };
 
         const positiveMessages = ["Wow!", "Amazing!", "Nice one!", "Good job!", "Excellent!", "Perfect!", "Correct!", "Fantastic!"];
         const negativeMessages = ["Oh sorry!", "Try again!", "Not quite!", "Incorrect!", "Wrong answer!", "Keep trying!"];
@@ -1017,7 +1032,6 @@
                 userSubjects = currentUser.subjects || [];
                 document.getElementById('stat-subjects').textContent = userSubjects.length;
 
-                // FIX: Fetch records with a pure single-field query to avoid composite index hurdles
                 const historyQ = queryRef(getCollectionRef(window.db, "results"), whereCondition("user", "==", currentUser.accessId));
                 const historySnap = await getDocsRef(historyQ);
                 
@@ -1028,7 +1042,6 @@
                 if (totalAttempts === 0) {
                     historyHtml = `<tr><td colspan="7" style="text-align: center; color: var(--text-secondary); padding: 25px;">No historical test sessions recorded.</td></tr>`;
                 } else {
-                    // FIX: Convert documents into an array and sort them client-side by timestamp safely
                     let sortedRecords = [];
                     historySnap.forEach(d => {
                         sortedRecords.push({ id: d.id, ...d.data() });
@@ -1037,7 +1050,7 @@
                     sortedRecords.sort((a, b) => {
                         const timeA = a.timestamp && a.timestamp.toDate ? a.timestamp.toDate() : new Date(a.timestamp || 0);
                         const timeB = b.timestamp && b.timestamp.toDate ? b.timestamp.toDate() : new Date(b.timestamp || 0);
-                        return timeB - timeA; // Descending order (newest first)
+                        return timeB - timeA; 
                     });
 
                     sortedRecords.forEach(data => {
@@ -1110,13 +1123,46 @@
             }
         }
 
-        function selectSubject(subjectId, subjectName) {
+        async function selectSubject(subjectId, subjectName) {
             currentSubject = { id: subjectId, name: subjectName };
             document.getElementById('category-subject-name').textContent = subjectName;
+
+            document.getElementById('mode-count-foundation').textContent = "Loading...";
+            document.getElementById('mode-count-standard').textContent = "Loading...";
+            document.getElementById('mode-count-exam').textContent = "Loading...";
+
+            categoryCounts = { foundation: 0, standard: 0, exam: 0 };
             showSection('category-section');
+
+            try {
+                const q = queryRef(getCollectionRef(window.db, "questions"), whereCondition("subjectId", "==", subjectId));
+                const snap = await getDocsRef(q);
+                
+                snap.forEach(d => {
+                    const data = d.data();
+                    const rawMode = (data.category || data.mode || "").toLowerCase().trim();
+                    if (rawMode === 'foundation') categoryCounts.foundation++;
+                    else if (rawMode === 'standard') categoryCounts.standard++;
+                    else if (rawMode === 'exam') categoryCounts.exam++;
+                });
+
+                document.getElementById('mode-count-foundation').textContent = `${categoryCounts.foundation} Questions`;
+                document.getElementById('mode-count-standard').textContent = `${categoryCounts.standard} Questions`;
+                document.getElementById('mode-count-exam').textContent = `${categoryCounts.exam} Questions`;
+
+            } catch(e) {
+                console.error("Error setting up category metrics:", e);
+                document.getElementById('mode-count-foundation').textContent = "0 Questions";
+                document.getElementById('mode-count-standard').textContent = "0 Questions";
+                document.getElementById('mode-count-exam').textContent = "0 Questions";
+            }
         }
 
         function selectCategory(category) {
+            if (categoryCounts[category] === 0) {
+                alert(`⚠️ No questions yet for this mode (${category.toUpperCase()}). Please choose a mode that has active questions.`);
+                return;
+            }
             selectedCategoryMode = category;
             showSection('mode-section');
         }
@@ -1133,11 +1179,15 @@
                 let questions = [];
                 
                 snap.forEach(d => {
-                    questions.push({ id: d.id, ...d.data() });
+                    const data = d.data();
+                    const rawMode = (data.category || data.mode || "").toLowerCase().trim();
+                    if (rawMode === selectedCategoryMode) {
+                        questions.push({ id: d.id, ...data });
+                    }
                 });
 
                 if (questions.length === 0) {
-                    alert('⚠️ No questions available for this subject yet.');
+                    alert('⚠️ No questions available for this structural mode layout.');
                     showSection('dashboard-section');
                     return;
                 }
