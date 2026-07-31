@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+  <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -219,7 +219,17 @@
                 <div class="card">
                     <h3>📋 All Subjects</h3>
                     <div class="controls-row">
-                        <div class="search-box"><span class="search-icon">🔍</span><input type="text" id="subject-search" placeholder="Search subjects..." oninput="filterSubjects()"></div>
+                        <div class="search-box">
+                            <span class="search-icon">🔍</span>
+                            <input type="text" id="subject-search" placeholder="Search subjects..." oninput="filterSubjects()">
+                        </div>
+                        <div style="min-width: 150px;">
+                            <select id="filter-subject-status" style="width:100%; padding:12px; border:2px solid var(--border-color); border-radius:10px; font-size:0.95rem; background:white;" onchange="filterSubjects()">
+                                <option value="">All Status</option>
+                                <option value="active">Active Only</option>
+                                <option value="archived">Archived Only</option>
+                            </select>
+                        </div>
                     </div>
                     <div id="subjects-list" class="user-list"><p style="color: var(--text-secondary);">Loading subjects...</p></div>
                 </div>
@@ -488,7 +498,7 @@
                 allSubjects = [];
                 snapshot.forEach(d => allSubjects.push({ id: d.id, ...d.data() }));
                 populateSubjectDropdowns();
-                renderSubjects(allSubjects);
+                filterSubjects();
                 updateMetricsAndLists();
             }, (error) => console.error("Subjects listener structural error:", error));
 
@@ -538,20 +548,45 @@
             };
             document.getElementById('page-title').textContent = titles[sectionName];
             updateMetricsAndLists();
-            if (sectionName === 'subjects') renderSubjects(allSubjects);
+            if (sectionName === 'subjects') filterSubjects();
             if (sectionName === 'questions') filterQuestions();
         }
 
         function renderSubjects(subjects) {
             const container = document.getElementById('subjects-list');
             if (!container) return;
-            if (subjects.length === 0) { container.innerHTML = '<p style="text-align:center;padding:30px;">No subjects</p>'; return; }
-            container.innerHTML = subjects.map(s => `<div class="list-item"><div class="item-info"><div class="main-text">📚 ${s.name}</div></div><div class="item-actions"><button class="btn btn-primary btn-sm" onclick="editSubject('${s.id}', '${s.name}')">✏️ Edit</button><button class="btn btn-danger btn-sm" onclick="confirmDeleteSubject('${s.id}', '${s.name}')">🗑️ Delete</button></div></div>`).join('');
+            if (subjects.length === 0) { container.innerHTML = '<p style="text-align:center;padding:30px;">No subjects found</p>'; return; }
+            container.innerHTML = subjects.map(s => {
+                const status = s.status || 'active';
+                const statusClass = `status-${status}`;
+                return `<div class="list-item">
+                    <div class="item-info">
+                        <div class="main-text">📚 ${s.name}</div>
+                    </div>
+                    <div class="item-actions">
+                        <span class="status-badge ${statusClass}">${status}</span>
+                        <button class="btn btn-primary btn-sm" onclick="editSubject('${s.id}', '${s.name.replace(/'/g, "\\'")}')">✏️ Edit</button>
+                        <button class="btn ${status === 'active' ? 'btn-warning' : 'btn-success'} btn-sm" onclick="toggleSubjectStatus('${s.id}', '${status}')">
+                            ${status === 'active' ? '📦 Archive' : '✅ Activate'}
+                        </button>
+                        <button class="btn btn-danger btn-sm" onclick="confirmDeleteSubject('${s.id}', '${s.name.replace(/'/g, "\\'")}')">🗑️ Delete</button>
+                    </div>
+                </div>`;
+            }).join('');
         }
 
         function filterSubjects() {
             const search = document.getElementById('subject-search').value.toLowerCase().trim();
-            renderSubjects(search ? allSubjects.filter(s => s.name.toLowerCase().includes(search)) : allSubjects);
+            const statusFilter = document.getElementById('filter-subject-status').value;
+            
+            let filtered = allSubjects;
+            if (statusFilter) {
+                filtered = filtered.filter(s => (s.status || 'active') === statusFilter);
+            }
+            if (search) {
+                filtered = filtered.filter(s => s.name.toLowerCase().includes(search));
+            }
+            renderSubjects(filtered);
         }
 
         async function saveSubject() {            
@@ -563,7 +598,11 @@
                     await window.firestoreFns.updateDoc(window.firestoreFns.doc(window.db, "subjects", editId), { name });
                     alert('✅ Subject updated!');
                 } else {
-                    await window.firestoreFns.addDoc(window.firestoreFns.collection(window.db, "subjects"), { name });
+                    await window.firestoreFns.addDoc(window.firestoreFns.collection(window.db, "subjects"), { 
+                        name,
+                        status: 'active',
+                        createdAt: new Date()
+                    });
                     alert('✅ Subject added!');
                 }
                 document.getElementById('subject-name').value = '';                
@@ -576,6 +615,13 @@
             document.getElementById('subject-name').value = name;
             document.getElementById('edit-subject-id').value = id;
             document.getElementById('save-subject-btn').textContent = '💾 Update Subject';
+        }
+
+        async function toggleSubjectStatus(id, currentStatus) {
+            const newStatus = currentStatus === 'active' ? 'archived' : 'active';
+            try {
+                await window.firestoreFns.updateDoc(window.firestoreFns.doc(window.db, "subjects", id), { status: newStatus });
+            } catch(e) { alert('Error modifying subject status state: ' + e.message); }
         }
 
         function confirmDeleteSubject(id, name) {
@@ -597,7 +643,7 @@
                 allSubjects.forEach(s => {
                     const opt = document.createElement('option');
                     opt.value = s.id;
-                    opt.textContent = s.name;
+                    opt.textContent = `${s.name}${s.status === 'archived' ? ' (Archived)' : ''}`;
                     sel.appendChild(opt);
                 });
                 if(curr) sel.value = curr;
@@ -937,7 +983,7 @@
                     <div class="item-actions">
                         <span class="status-badge status-${u.status || 'active'}">${u.status || 'active'}</span>
                         ${u.status === 'active' ? `<button class="btn btn-warning btn-sm" onclick="toggleUserStatus('${u.id}', 'paused')">⏸️ Pause</button>` : `<button class="btn btn-success btn-sm" onclick="toggleUserStatus('${u.id}', 'active')">▶️ Resume</button>`}
-                        <button class="btn btn-danger btn-sm" onclick="confirmDeleteUser('${u.id}', '${u.fullName || u.accessId}')">🗑️ Delete</button>
+                        <button class="btn btn-danger btn-sm" onclick="confirmDeleteUser('${u.id}', '${(u.fullName || u.accessId || '').replace(/'/g, "\\'")}')">🗑️ Delete</button>
                     </div>
                 </div>`;
             }).join('');
@@ -999,7 +1045,7 @@
                         </div>
                         <div class="item-actions">
                             <span class="status-badge status-active">Success Verified</span>
-                            <button class="btn btn-danger btn-sm" onclick="confirmDeleteTransaction('${u.id}', '${u.fullName || u.accessId}')">🗑️ Delete</button>
+                            <button class="btn btn-danger btn-sm" onclick="confirmDeleteTransaction('${u.id}', '${(u.fullName || u.accessId || '').replace(/'/g, "\\'")}')">🗑️ Delete</button>
                         </div>
                     </div>
                 `).join('');

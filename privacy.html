@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scholars Breeding | Privacy Policy</title>
+    <!-- Google Fonts & Font Awesome Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary: #5850ec;
+            --primary-dark: #4338ca;
+            --primary-light: #eef2ff;
+            --accent-gold: #f59e0b;
+            --dark-bg: #0b0f17;
+            --card-bg: #ffffff;
+            --body-bg: #f8fafc;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            --radius-pill: 50px;
+            --radius-card: 20px;
+            --shadow-subtle: 0 10px 30px -5px rgba(0, 0, 0, 0.05);
+            --shadow-glow: 0 15px 35px -5px rgba(88, 80, 236, 0.25);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background-color: var(--body-bg);
+            color: var(--text-main);
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        /* --- Header matching index screenshot --- */
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            padding: 14px 0;
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .brand-link {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            text-decoration: none;
+        }
+
+        .brand-logo {
+            height: 52px;
+            width: auto;
+            object-fit: contain;
+        }
+
+        .brand-title {
+            font-size: 1rem;
+            font-weight: 300;
+            color: #667eea;
+            letter-spacing: -0.03em;
+            font-style: verdana;
+            text-transform: uppercase;
+            line-height: 1.1;
+        }
+
+        .nav-buttons {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .btn-pill {
+            padding: 10px 22px;
+            border-radius: var(--radius-pill);
+            font-size: 0.95rem;
+            font-weight: 700;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.25s ease;
+            font-style: italic;
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: #1e293b;
+            border: 1.5px solid #cbd5e1;
+        }
+
+        .btn-outline:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            background: var(--primary-light);
+        }
+
+        .btn-solid {
+            background: var(--primary);
+            color: white;
+            border: 1.5px solid var(--primary);
+            box-shadow: var(--shadow-glow);
+        }
+
+        .btn-solid:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        /* --- Hero Header Section --- */
+        .hero {
+            background: linear-gradient(135deg, #090d16 0%, #1e1b4b 50%, #312e81 100%);
+            color: white;
+            padding: 85px 20px 140px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -20%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(88, 80, 236, 0.3) 0%, rgba(0,0,0,0) 70%);
+            pointer-events: none;
+        }
+
+        .hero-inner {
+            max-width: 850px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 6px 18px;
+            border-radius: var(--radius-pill);
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #f1f5f9;
+            margin-bottom: 24px;
+            backdrop-filter: blur(8px);
+        }
+
+        .hero-badge i {
+            color: var(--accent-gold);
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            font-weight: 900;
+            line-height: 1.2;
+            margin-bottom: 18px;
+            letter-spacing: -0.02em;
+            background: linear-gradient(180deg, #ffffff 0%, #cbd5e1 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            font-size: 1.15rem;
+            color: #94a3b8;
+            max-width: 680px;
+            margin: 0 auto;
+        }
+
+        /* --- Main Content Container --- */
+        .main-wrapper {
+            max-width: 950px;
+            margin: -70px auto 80px;
+            padding: 0 20px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .content-card {
+            background: var(--card-bg);
+            border-radius: var(--radius-card);
+            padding: 50px;
+            box-shadow: var(--shadow-subtle);
+            border: 1px solid var(--border-color);
+        }
+
+        .policy-meta {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-bottom: 24px;
+            margin-bottom: 32px;
+            border-bottom: 1px solid var(--border-color);
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .meta-tag {
+            background: var(--primary-light);
+            color: var(--primary);
+            font-weight: 700;
+            padding: 6px 16px;
+            border-radius: var(--radius-pill);
+            font-size: 0.85rem;
+        }
+
+        .meta-date {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        /* Policy Sections */
+        .policy-section {
+            margin-bottom: 36px;
+        }
+
+        .policy-section h2 {
+            font-size: 1.35rem;
+            font-weight: 800;
+            color: var(--text-main);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            letter-spacing: -0.01em;
+        }
+
+        .policy-section h2 i {
+            color: var(--primary);
+            font-size: 1.1rem;
+        }
+
+        .policy-section p {
+            color: #334155;
+            font-size: 0.98rem;
+            margin-bottom: 14px;
+        }
+
+        .policy-list {
+            list-style: none;
+            padding-left: 0;
+            margin-bottom: 16px;
+        }
+
+        .policy-list li {
+            position: relative;
+            padding-left: 28px;
+            color: #334155;
+            font-size: 0.95rem;
+            margin-bottom: 10px;
+        }
+
+        .policy-list li::before {
+            content: "\f00c";
+            font-family: "Font Awesome 6 Free";
+            font-weight: 900;
+            position: absolute;
+            left: 0;
+            top: 2px;
+            color: var(--primary);
+            font-size: 0.85rem;
+        }
+
+        /* Highlight Notice Box */
+        .notice-box {
+            background: #f8fafc;
+            border: 1px solid #cbd5e1;
+            border-left: 4px solid var(--primary);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 24px 0;
+            font-size: 0.92rem;
+            color: #334155;
+        }
+
+        /* Support Section Box */
+        .support-box {
+            background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+            border-radius: 16px;
+            padding: 30px;
+            text-align: center;
+            margin-top: 40px;
+            border: 1px solid var(--border-color);
+        }
+
+        .support-box h3 {
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--text-main);
+            margin-bottom: 8px;
+        }
+
+        .support-box p {
+            color: var(--text-muted);
+            font-size: 0.92rem;
+            margin-bottom: 16px;
+        }
+
+        .support-email {
+            display: inline-flex;
+            align-items: center;
+            gap: 3px;
+            background: white;
+            color: var(--primary);
+            font-size: 0.7rem;
+            font-weight: 300;
+            padding: 10px 20px;
+            border-radius: 10px;
+            text-decoration: none;
+            border: 1px solid var(--border-color);
+            transition: all 0.2s ease;
+        }
+
+        .support-email:hover {
+            border-color: var(--primary);
+            box-shadow: 0 4px 12px rgba(88, 80, 236, 0.15);
+        }
+
+        /* --- Footer --- */
+        .footer {
+            background: var(--dark-bg);
+            color: white;
+            padding: 50px 20px 30px;
+            text-align: center;
+            border-top: 1px solid #1e293b;
+        }
+
+        .footer h3 {
+            font-size: 1.3rem;
+            font-weight: 800;
+            margin-bottom: 6px;
+            letter-spacing: -0.01em;
+        }
+
+        .footer p {
+            color: #94a3b8;
+            font-size: 0.88rem;
+        }
+
+        .footer-nav {
+            margin: 24px 0;
+            display: flex;
+            gap: 24px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .footer-nav a {
+            color: #cbd5e1;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: color 0.2s ease;
+        }
+
+        .footer-nav a:hover {
+            color: white;
+        }
+
+        .footer-bottom {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #1e293b;
+            font-size: 0.82rem;
+            color: #64748b;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .brand-title { font-size: 1.25rem; }
+            .brand-logo { height: 42px; }
+            .hero h1 { font-size: 2.1rem; }
+            .content-card { padding: 28px 20px; }
+            .btn-pill { padding: 8px 16px; font-size: 0.85rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Matching Index Navigation -->
+    <header class="header">
+        <div class="header-container">
+            <a href="index.html" class="brand-link">
+                <img src="logo.png" alt="Scholars Breeding Platform" class="brand-logo" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎓</text></svg>'">
+                <span class="brand-title">Scholars Breeding</span>
+            </a>
+           
+                <a href="dashboard.html" class="btn-pill btn-solid">
+                    <i class="fa-solid fa-lock"></i> Login
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-inner">
+            <div class="hero-badge">
+                <i class="fa-solid fa-shield-halved"></i> Data Protection & Privacy Standards
+            </div>
+            <h1>Privacy Policy</h1>
+            <p>Your privacy and data security are fundamental to us. Learn how we handle, store, and safeguard your student information.</p>
+        </div>
+    </section>
+
+    <!-- Main Content Container -->
+    <main class="main-wrapper">
+        <div class="content-card">
+
+            <div class="policy-meta">
+                <span class="meta-tag"><i class="fa-solid fa-lock"></i> GDPR & NDPR Compliant</span>
+                <span class="meta-date">Last Updated: July 2026</span>
+            </div>
+
+            <!-- Section 1 -->
+            <div class="policy-section">
+                <h2><i class="fa-solid fa-circle-info"></i> 1. Introduction</h2>
+                <p>At <b>Scholars Breeding Platform</b>, we prioritize the confidentiality and safety of your personal information. This Privacy Policy outlines how we collect, process, and protect student data across our WAEC, NECO, GCE, and JAMB prep platforms.</p>
+            </div>
+
+            <!-- Section 2 -->
+            <div class="policy-section">
+                <h2><i class="fa-solid fa-database"></i> 2. Information We Collect</h2>
+                <p>We collect essential information required to deliver personalized academic content, CBT practice tracking, and subscription management:</p>
+                <ul class="policy-list">
+                    <li><b>Student Registration Profile:</b> Full name, email address, phone number, and exam preference selections.</li>
+                    <li><b>Academic Progress Data:</b> Test scores, practice time logs, subject performance metrics, and generated Access ID credentials.</li>
+                    <li><b>Transaction History:</b> Records of activated access plans, payment receipts, and subscription statuses.</li>
+                </ul>
+            </div>
+
+            <!-- Notice Box -->
+            <div class="notice-box">
+                <i class="fa-solid fa-shield-check" style="color: var(--primary);"></i> <b>Payment Security Disclaimer:</b> All monetary transactions are processed via <b>Paystack</b> over encrypted PCI-DSS compliant gateways. Scholars Breeding does <u>not</u> store full debit card details, PINs, or sensitive banking credentials on our infrastructure.
+            </div>
+
+            <!-- Section 3 -->
+            <div class="policy-section">
+                <h2><i class="fa-solid fa-sliders"></i> 3. How We Use Your Data</h2>
+                <p>Your data is strictly utilized to enhance your academic experience on our platform:</p>
+                <ul class="policy-list">
+                    <li>To generate unique student Access IDs and manage platform authentication.</li>
+                    <li>To deliver tailored CBT practice questions based on your chosen exam categories.</li>
+                    <li>To track study analytics and highlight performance strengths and weaknesses.</li>
+                    <li>To issue official transaction notifications and support responses.</li>
+                </ul>
+            </div>
+
+            <!-- Section 4 -->
+            <div class="policy-section">
+                <h2><i class="fa-solid fa-server"></i> 4. Data Storage & Infrastructure</h2>
+                <p>We utilize secure cloud environments backed by <b>Firebase Infrastructure</b> to ensure end-to-end data encryption during storage and transit. Automated system backups prevent data loss and safeguard your study records.</p>
+            </div>
+
+            <!-- Section 5 -->
+            <div class="policy-section">
+                <h2><i class="fa-solid fa-user-shield"></i> 5. Your Rights as a Student</h2>
+                <p>As a registered candidate on Scholars Breeding, you reserve full ownership rights over your personal profile data:</p>
+                <ul class="policy-list">
+                    <li><b>Right to Access:</b> You can request a summary of your profile data and study analytics.</li>
+                    <li><b>Right to Rectification:</b> Update or correct inaccuracies in your name or exam preferences anytime.</li>
+                    <li><b>Right to Erasure:</b> Request account deletion and associated study data removal upon completion of your exams.</li>
+                </ul>
+            </div>
+
+            <!-- Support Box -->
+            <div class="support-box">
+                <h3><i class="fa-solid fa-envelope-open-text"></i> Questions Regarding Privacy?</h3>
+                <p>For data modification requests, account deletion, or privacy inquiries, contact our verified support team:</p>
+                <a href="mailto:scholarsbreeding.top@gmail.com" class="support-email">
+                    <i class="fa-solid fa-paper-plane"></i> scholarsbreeding.top@gmail.com
+                </a>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <h3>Scholars Breeding Platform</h3>
+        <p>Global Academic Excellence for WAEC, NECO, GCE & JAMB Prep</p>
+        
+        <div class="footer-nav">
+            <a href="about.html">About Us</a>
+            <a href="privacy.html">Privacy Policy</a>
+            <a href="contact.html">Contact Us</a>
+        </div>
+
+        <p>Made with passion for academic excellence</p>
+        <div class="footer-bottom">
+            © 2026 Scholars Breeding. All Rights Reserved.
+        </div>
+    </footer>
+
+</body>
+</html>

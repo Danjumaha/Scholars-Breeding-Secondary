@@ -1,10 +1,24 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>🎓 Student Dashboard - Scholars Breeding</title>
     
+    <!-- MathJax Library for Rendering Scientific & Mathematical Formats/Matrices -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            },
+            options: {
+                skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, collection, addDoc, getDocs, doc, deleteDoc, updateDoc, query, where, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
@@ -28,31 +42,35 @@
         :root {
             --primary: #667eea;
             --secondary: #764ba2;
-            --light: #f3f4f6;
+            --light: #f8fafc;
             --dark: #1a202c;
             --white: #ffffff;
             --success: #48bb78;
             --danger: #f56565;
             --gold: #ecc94b;
-            --text-primary: #1a237e;
-            --text-secondary: #4a5568;
+            --text-primary: black;
+            --text-secondary: black;
             --border-color: #e2e8f0;
             --card-bg: #ffffff;
-            --input-bg: #f7fafc;
+            --input-bg: #f8fafc;
+            --explanation-bg: #f0f9ff;
+            --explanation-inner: #ffffff;
         }
 
         [data-theme="dark"] {
-            --light: #1a202c;
-            --white: #2d3748;
-            --dark: #f7fafc;
-            --text-primary: #f7fafc;
-            --text-secondary: #e2e8f0;
-            --border-color: #4a5568;            
-            --card-bg: #2d3748;
-            --input-bg: #1a202c;
+            --light: #0f172a;
+            --white: #1e293b;
+            --dark: #f8fafc;
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --border-color: #334155;            
+            --card-bg: #1e293b;
+            --input-bg: #0f172a;
+            --explanation-bg: #0c4a6e;
+            --explanation-inner: #075985;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, -apple-system, Roboto, sans-serif; }
         
         body {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -115,6 +133,8 @@
             padding: 6px 12px;
             width: auto;
             margin-top: 5px;
+            border-radius: 6px;
+            cursor: pointer;
         }
 
         .section { display: none; animation: fadeIn 0.4s ease; }
@@ -236,7 +256,7 @@
             border-color: var(--primary);
             transform: translateY(-5px);
             box-shadow: 0 8px 20px rgba(102, 126, 234, 0.2);
-            background: white;
+            background: var(--card-bg);
         }
         .subject-card .icon { font-size: 2.5rem; margin-bottom: 12px; }
         .subject-card .name { font-weight: bold; color: var(--primary); font-size: 1.1rem; }
@@ -296,6 +316,7 @@
             width: auto;
             margin-top: 0;
             transition: all 0.2s;
+            cursor: pointer;
         }
         .delete-btn:hover {
             background: var(--danger);
@@ -388,6 +409,8 @@
             color: var(--text-primary); 
             margin-bottom: 20px; 
             line-height: 1.6; 
+            white-space: pre-wrap; 
+            word-wrap: break-word;
         }
 
         .voice-hint {
@@ -421,6 +444,8 @@
             cursor: pointer;
             font-size: 1rem;
             margin-top: 0;
+            white-space: pre-wrap;
+            word-wrap: break-word;
         }
         .option-btn:hover:not(:disabled) { border-color: var(--primary); background: rgba(102, 126, 234, 0.05); transform: translateX(5px); box-shadow: none; }
         .option-btn.correct { background: #c6f6d5; border-color: var(--success); color: #22543d; }
@@ -434,36 +459,98 @@
             border-radius: 8px; 
             min-width: 35px; 
             text-align: center;
+            flex-shrink: 0;
         }
         .option-btn.correct .option-label { background: var(--success); }
         .option-btn.wrong .option-label { background: var(--danger); }
 
         .theory-answer-box {
             width: 100%;
-            min-height: 150px;
-            padding: 15px;
+            min-height: 140px;
+            padding: 18px;
             border: 2px solid var(--border-color);
-            border-radius: 10px;
-            font-size: 1rem;
+            border-radius: 12px;
+            font-size: 1.05rem;
             background: var(--input-bg);
             color: var(--text-primary);
             resize: vertical;
             font-family: inherit;
+            line-height: 1.6;
         }
-        .theory-answer-box:focus { border-color: var(--primary); outline: none; }
+        .theory-answer-box:focus { border-color: var(--primary); outline: none; box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.15); }
+
+        .theory-solution-card {
+            margin-top: 20px;
+            padding: 22px;
+            background: var(--explanation-bg);
+            border: 1px solid var(--border-color);
+            border-left: 5px solid var(--primary);
+            border-radius: 14px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+        }
+
+        .theory-solution-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 14px;
+            padding-bottom: 10px;
+            border-bottom: 1px dashed var(--border-color);
+        }
+
+        .formatted-content {
+            white-space: pre-wrap !important;
+            word-break: break-word !important;
+            font-family: inherit !important;
+            line-height: 1.85 !important;
+            font-size: 1.02rem !important;
+            letter-spacing: 0.2px;
+            color: var(--text-primary);
+        }
+
+        .formatted-content p {
+            margin-bottom: 10px;
+        }
+
+        .formatted-content .step-block {
+            background: var(--explanation-inner);
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin: 8px 0;
+            border: 1px solid var(--border-color);
+        }
 
         .explanation-box {
             display: none;
-            background: #ebf8ff;
-            border-left: 4px solid #4299e1;
-            padding: 20px;
-            margin-top: 20px; border-radius: 8px;
-            font-size: 1rem;
+            background: var(--explanation-bg);
+            border-left: 5px solid #4299e1;
+            padding: 22px;
+            margin-top: 25px; 
+            border-radius: 14px;
+            font-size: 1.05rem;
             color: var(--text-primary);
             animation: slideDown 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+        .explanation-title {
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: #2b6cb0;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        [data-theme="dark"] .explanation-title { color: #63b3ed; }
+        .explanation-body {
+            line-height: 1.8;
+            white-space: pre-wrap;
+            word-wrap: break-word;
         }
         @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
-        [data-theme="dark"] .explanation-box { background: #1a365d; border-left-color: #63b3ed; }
 
         .exam-nav { display: flex; gap: 12px; margin-top: 25px; }
         .exam-nav button { flex: 1; }
@@ -772,8 +859,7 @@
 
             <div style="text-align: center; margin: 15px 0;">
                 <button class="calc-toggle-btn-large" onclick="openCalculator()">
-                    <span style="font-size: 1.5rem;">📊</span> Calculator
-                </button>
+                    <span style="font-size: 1.5rem;"></span> Calculate here</button>
             </div>
 
             <div class="question-box">
@@ -785,8 +871,9 @@
             <div class="options-grid" id="options-container"></div>
 
             <div class="explanation-box" id="explanation-box">
-                <div id="explanation-content"></div>
-                <img id="exp-image" class="question-image" style="display: none; margin-top: 10px;" alt="Explanation Image">
+                <div class="explanation-title">💡 Explanation</div>
+                <div class="explanation-body" id="explanation-content"></div>
+                <img id="exp-image" class="question-image" style="display: none; margin-top: 15px;" alt="Explanation Image">
             </div>
 
             <div class="exam-nav">
@@ -853,6 +940,7 @@
         let userAnswers = {};
         let nextQuestionTimeout = null;
         let userSubjects = [];
+        let availableVoices = [];
         
         let categoryCounts = { foundation: 0, standard: 0, exam: 0 };
 
@@ -879,6 +967,17 @@
 
         if (localStorage.getItem('hgdl_theme') === 'dark') {
             document.documentElement.setAttribute('data-theme', 'dark');
+        }
+
+        // Initialize Speech Synthesis Voices
+        function loadVoices() {
+            if (window.speechSynthesis) {
+                availableVoices = window.speechSynthesis.getVoices();
+            }
+        }
+        loadVoices();
+        if (window.speechSynthesis) {
+            window.speechSynthesis.onvoiceschanged = loadVoices;
         }
 
         document.getElementById('sound-toggle').addEventListener('click', function() {
@@ -920,6 +1019,15 @@
                 localStorage.setItem('scholars_device_id', deviceId);
             }
             return deviceId;
+        }
+
+        // Helper to determine whether an item/question/subject is archived
+        function isArchivedQuestion(data) {
+            return data.archived === true || data.isArchived === true || data.status === 'archived';
+        }
+
+        function isArchivedSubject(subjectData) {
+            return subjectData.archived === true || subjectData.isArchived === true || subjectData.status === 'archived';
         }
 
         async function studentLogin() {
@@ -1029,7 +1137,30 @@
             try {
                 if (!window.db || !window.firestoreFns) return;
 
-                userSubjects = currentUser.subjects || [];
+                // 1. Fetch live global list of active (non-archived) subjects from system database
+                let globalSubjectsMap = {};
+                const subjQuery = getCollectionRef(window.db, "subjects");
+                if (subjQuery) {
+                    const subjSnap = await getDocsRef(subjQuery);
+                    subjSnap.forEach(docSnap => {
+                        const sData = docSnap.data();
+                        if (!isArchivedSubject(sData)) {
+                            globalSubjectsMap[docSnap.id] = { id: docSnap.id, ...sData };
+                        }
+                    });
+                }
+
+                // Filter user subjects so archived subjects are hidden completely
+                const rawUserSubjects = currentUser.subjects || [];
+                userSubjects = rawUserSubjects.filter(s => {
+                    if (isArchivedSubject(s)) return false;
+                    // Check against global subjects if available
+                    if (Object.keys(globalSubjectsMap).length > 0) {
+                        return !!globalSubjectsMap[s.id];
+                    }
+                    return true;
+                });
+
                 document.getElementById('stat-subjects').textContent = userSubjects.length;
 
                 const historyQ = queryRef(getCollectionRef(window.db, "results"), whereCondition("user", "==", currentUser.accessId));
@@ -1086,7 +1217,7 @@
 
                 const grid = document.getElementById('subjects-grid');
                 if (userSubjects.length === 0) {
-                    grid.innerHTML = '<p style="color: var(--text-secondary); text-align: center; padding: 40px;">No subjects available. Please contact support.</p>';
+                    grid.innerHTML = '<p style="color: var(--text-secondary); text-align: center; padding: 40px;">No active subjects available. Please contact support.</p>';
                     return;
                 }
 
@@ -1101,8 +1232,17 @@
                 for (const subj of userSubjects) {
                     const qCountQuery = queryRef(getCollectionRef(window.db, "questions"), whereCondition("subjectId", "==", subj.id));
                     const qSnap = await getDocsRef(qCountQuery);
+                    
+                    let activeCount = 0;
+                    qSnap.forEach(docSnap => {
+                        const data = docSnap.data();
+                        if (!isArchivedQuestion(data)) {
+                            activeCount++;
+                        }
+                    });
+
                     const el = document.getElementById(`q-count-${subj.id}`);
-                    if(el) el.textContent = `${qSnap.size} Questions`;
+                    if(el) el.textContent = `${activeCount} Questions`;
                 }
             } catch (e) {
                 console.error('Error loading dashboard metrics:', e);
@@ -1124,6 +1264,21 @@
         }
 
         async function selectSubject(subjectId, subjectName) {
+            // Verify if subject is archived before proceeding
+            try {
+                const subjDoc = await getDocsRef(queryRef(getCollectionRef(window.db, "subjects"), whereCondition("__name__", "==", subjectId)));
+                if (!subjDoc.empty) {
+                    const sData = subjDoc.docs[0].data();
+                    if (isArchivedSubject(sData)) {
+                        alert("⚠️ This subject is currently archived and unavailable.");
+                        loadDashboard();
+                        return;
+                    }
+                }
+            } catch(err) {
+                console.log("Subject check bypassed:", err);
+            }
+
             currentSubject = { id: subjectId, name: subjectName };
             document.getElementById('category-subject-name').textContent = subjectName;
 
@@ -1140,6 +1295,10 @@
                 
                 snap.forEach(d => {
                     const data = d.data();
+
+                    // Filter out archived questions entirely
+                    if (isArchivedQuestion(data)) return;
+
                     const rawMode = (data.category || data.mode || "").toLowerCase().trim();
                     if (rawMode === 'foundation') categoryCounts.foundation++;
                     else if (rawMode === 'standard') categoryCounts.standard++;
@@ -1160,7 +1319,7 @@
 
         function selectCategory(category) {
             if (categoryCounts[category] === 0) {
-                alert(`⚠️ No questions yet for this mode (${category.toUpperCase()}). Please choose a mode that has active questions.`);
+                alert(`⚠️ No questions available for this mode (${category.toUpperCase()}). Please choose a mode that has active non-archived questions.`);
                 return;
             }
             selectedCategoryMode = category;
@@ -1180,6 +1339,10 @@
                 
                 snap.forEach(d => {
                     const data = d.data();
+
+                    // Exclude any question flagged as archived
+                    if (isArchivedQuestion(data)) return;
+
                     const rawMode = (data.category || data.mode || "").toLowerCase().trim();
                     if (rawMode === selectedCategoryMode) {
                         questions.push({ id: d.id, ...data });
@@ -1187,7 +1350,7 @@
                 });
 
                 if (questions.length === 0) {
-                    alert('⚠️ No questions available for this structural mode layout.');
+                    alert('⚠️ No active (non-archived) questions available for this mode.');
                     showSection('dashboard-section');
                     return;
                 }
@@ -1313,11 +1476,42 @@
             }, 3000);
         }
 
+        // Helper function to format structured multi-line text and math expressions beautifully
+        function formatStructuredText(text) {
+            if (!text) return "";
+            
+            let cleanText = text
+                .replace(/\\\[/g, '$$$$')
+                .replace(/\\\]/g, '$$$$')
+                .replace(/\\\(/g, '$')
+                .replace(/\\\)/g, '$');
+
+            cleanText = cleanText
+                .replace(/(\[[a-z0-9IVX]+\]|\([a-z0-9IVX]+\)|\b[i|v|x]+\b:)/gi, '\n<strong style="color:var(--primary); display:inline-block; margin-top:8px;">$1</strong>')
+                .replace(/(Find|Determine|Set|Calculate|Evaluate|When|At|Local Maximum|Local Minimum|Y-intercept|Curve|Area)/g, '\n$1');
+
+            const paragraphs = cleanText.split('\n').filter(line => line.trim() !== '');
+            const formattedHTML = paragraphs.map(p => {
+                if (p.trim().startsWith('<strong')) return `<p>${p}</p>`;
+                return `<p style="margin-bottom: 6px;">${p.trim()}</p>`;
+            }).join('');
+
+            return `<div class="formatted-content">${formattedHTML}</div>`;
+        }
+
         function loadQuestion(idx) {
             if (!currentQuestions[idx]) return;
             const q = currentQuestions[idx];
             
-            document.getElementById('q-text').textContent = q.q || q.question || "No Question text provided.";
+            const rawQText = q.q || q.question || "No Question text provided.";
+            const qContainer = document.getElementById('q-text');
+            
+            if (rawQText.includes('\n') || rawQText.includes('[') || rawQText.includes('(')) {
+                qContainer.innerHTML = formatStructuredText(rawQText);
+            } else {
+                qContainer.textContent = rawQText;
+            }
+
             document.getElementById('question-counter').textContent = `Q: ${idx + 1}/${currentQuestions.length}`;
             document.getElementById('live-score').textContent = score;
 
@@ -1337,11 +1531,14 @@
 
             if (hasAnswered) {
                 expBox.style.display = 'block';
-                const explanationText = q.exp || q.explanation || 'No step-by-step explanation provided.';
+                const rawExpText = q.exp || q.explanation || 'No step-by-step explanation provided.';
+                
+                let renderedExp = formatStructuredText(rawExpText);
+
                 if (userAnswers[idx] === -1) {
-                    expContent.innerHTML = `<strong style="color: var(--danger);">⏰ Time Up!</strong><br>${explanationText}`;
+                    expContent.innerHTML = `<div style="color: var(--danger); font-weight: bold; margin-bottom: 8px;">⏰ Time Expired</div>${renderedExp}`;
                 } else {
-                    expContent.innerHTML = `<strong>💡 Explanation:</strong> ${explanationText}`;
+                    expContent.innerHTML = renderedExp;
                 }
                 
                 const targetExpImg = q.explanationImage || q.expImage || null;
@@ -1364,7 +1561,9 @@
                 q.options.forEach((opt, i) => {
                     const btn = document.createElement('button');
                     btn.className = 'option-btn';
-                    btn.innerHTML = `<span class="option-label">${String.fromCharCode(65 + i)}</span> ${opt}`;
+                    
+                    const optContent = (opt.includes('\n') || opt.includes('|')) ? formatStructuredText(opt) : opt;
+                    btn.innerHTML = `<span class="option-label">${String.fromCharCode(65 + i)}</span> <div>${optContent}</div>`;
 
                     let correctAnswerIndex = parseInt(q.answer);
                     if (isNaN(correctAnswerIndex) && q.correctAnswer !== undefined) {
@@ -1396,13 +1595,18 @@
                     textarea.value = userAnswers[idx];
                     
                     const sampleDiv = document.createElement('div');
-                    sampleDiv.style.marginTop = '15px';
-                    sampleDiv.style.padding = '15px';
-                    sampleDiv.style.background = 'var(--light)';
-                    sampleDiv.style.borderRadius = '8px';
+                    sampleDiv.className = 'theory-solution-card';
+                    
+                    const rawAnswerText = q.sampleAnswer || q.correctAnswer || q.answer || 'No criteria provided.';
+                    const prettyAnswerText = formatStructuredText(rawAnswerText);
+
                     sampleDiv.innerHTML = `
-                        <strong>📝 Sample Grading Matrix Answer:</strong><br>
-                        ${q.sampleAnswer || q.correctAnswer || 'No criteria provided.'}
+                        <div class="theory-solution-header">
+                            📝 Sample Grading Matrix Solution
+                        </div>
+                        <div style="font-size: 1rem;">
+                            ${prettyAnswerText}
+                        </div>
                     `;
                     container.appendChild(textarea);
                     container.appendChild(sampleDiv);
@@ -1420,6 +1624,11 @@
             const isLast = (idx === currentQuestions.length - 1);
             document.getElementById('next-btn').style.display = isLast ? 'none' : 'block';
             document.getElementById('submit-btn').style.display = isLast ? 'block' : 'none';
+
+            // Trigger MathJax re-render for LaTeX content
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                window.MathJax.typesetPromise().catch(err => console.error("MathJax typesetting error:", err));
+            }
 
             if (isSoundEnabled && !hasAnswered) {
                 setTimeout(() => { speakQuestion(q); }, 400);
@@ -1458,8 +1667,15 @@
                 showFeedbackOverlay(false);
             }
 
+            const rawExpText = q.exp || q.explanation || 'No explanation provided.';
+            const renderedExp = formatStructuredText(rawExpText);
+            
             document.getElementById('explanation-box').style.display = 'block';
-            document.getElementById('explanation-content').innerHTML = `<strong>💡 Explanation:</strong> ${q.exp || q.explanation || 'No explanation provided.'}`;
+            document.getElementById('explanation-content').innerHTML = renderedExp;
+
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                window.MathJax.typesetPromise();
+            }
 
             if (currentMode !== 'beginner') {
                 nextQuestionTimeout = setTimeout(() => {
@@ -1555,23 +1771,62 @@
             }, 1500);
         }
 
-        function speak(text) {
+        // Advanced Multilingual & Scientific Text-To-Speech Engine
+        function speak(text, subjectLang = 'en') {
             if (!isSoundEnabled || !window.speechSynthesis) return;
             window.speechSynthesis.cancel();
-            const u = new SpeechSynthesisUtterance(text);
-            u.rate = 1.0;
+
+            let processedText = text
+                .replace(/σ\^2|σ²/g, " sigma squared ")
+                .replace(/x̄|x̅|\(x̄\)/g, " x bar ")
+                .replace(/∑|\\sum/g, " sum of ")
+                .replace(/√|\\sqrt/g, " square root of ")
+                .replace(/λ/g, " lambda ")
+                .replace(/π/g, " pi ")
+                .replace(/∫/g, " integral of ")
+                .replace(/≠/g, " is not equal to ")
+                .replace(/≤/g, " is less than or equal to ")
+                .replace(/≥/g, " is greater than or equal to ")
+                .replace(/\|([0-9\s,-]+)\|/g, " determinant matrix $1 ");
+
+            const u = new SpeechSynthesisUtterance(processedText);
+            u.rate = 0.95;
+
+            const lang = subjectLang.toLowerCase();
+            let selectedVoice = null;
+
+            if (lang.includes('french') || lang.includes('fr')) {
+                u.lang = 'fr-FR';
+                selectedVoice = availableVoices.find(v => v.lang.startsWith('fr'));
+            } else if (lang.includes('yoruba')) {
+                u.lang = 'yo-NG';
+                selectedVoice = availableVoices.find(v => v.lang.startsWith('yo') || v.lang.includes('NG'));
+            } else if (lang.includes('hausa')) {
+                u.lang = 'ha-NG';
+                selectedVoice = availableVoices.find(v => v.lang.startsWith('ha') || v.lang.includes('NG'));
+            } else if (lang.includes('igbo')) {
+                u.lang = 'ig-NG';
+                selectedVoice = availableVoices.find(v => v.lang.startsWith('ig') || v.lang.includes('NG'));
+            } else {
+                u.lang = 'en-US';
+                selectedVoice = availableVoices.find(v => v.lang.startsWith('en'));
+            }
+
+            if (selectedVoice) u.voice = selectedVoice;
             window.speechSynthesis.speak(u);
         }
 
         function speakQuestion(q) {
             let txt = q.q || q.question || "";
-            if(q.options && q.options.length > 0) {
+            const subjectName = currentSubject ? currentSubject.name : 'en';
+
+            if (q.options && q.options.length > 0) {
                 txt += ". Options are: ";
                 q.options.forEach((o, i) => {
                     txt += ` Option ${String.fromCharCode(65 + i)}, ${o}. `;
                 });
             }
-            speak(txt);
+            speak(txt, subjectName);
         }
 
         function replayCurrentQuestion() {

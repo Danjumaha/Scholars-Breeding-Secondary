@@ -1,421 +1,888 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>📊 Calculator Scholar's Breeding</title>
+    <title>📊 Multi-Function Scientific Calculator</title>
     <style>
         :root {
-            --primary: #667eea;
-            --secondary: #764ba2;
-            --light: #f3f4f6;
-            --dark: #1a202c;
-            --white: #ffffff;
-            --success: #48bb78;
-            --danger: #f56565;
-            --gold: #ecc94b;
-            --text-primary: #1a237e;
-            --text-secondary: black;
-            --border-color: #e2e8f0;
+            --bg-color: #0d1117;
+            --card-bg: #161b22;
+            --calc-display: #090d12;
+            --btn-bg: #21262d;
+            --btn-hover: #30363d;
+            --text-primary: #f0f6fc;
+            --text-secondary: #8b949e;
+            --accent-cyan: #00f2fe;
+            --accent-purple: #764ba2;
+            --accent-green: #2ea043;
+            --accent-red: #da3633;
+            --border-color: #30363d;
+        }
+
+        [data-theme="light"] {
+            --bg-color: #f3f4f6;
             --card-bg: #ffffff;
-            --input-bg: #f7fafc;
-            --calc-bg: #1e293b;
-            --calc-btn: #334155;
-            --calc-btn-hover: #475569;
-            --calc-display: #0f172a;
-            --calc-text: #f1f5f9;
+            --calc-display: #e2e8f0;
+            --btn-bg: #f8fafc;
+            --btn-hover: #e2e8f0;
+            --text-primary: #0f172a;
+            --text-secondary: #64748b;
+            --border-color: #cbd5e1;
         }
 
-        [data-theme="dark"] {
-            --light: #1a202c;
-            --white: #2d3748;
-            --dark: #f7fafc;
-            --text-primary: #f7fafc;
-            --text-secondary: #e2e8f0;
-            --border-color: #4a5568;
-            --card-bg: #2d3748;
-            --input-bg: #1a202c;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        
         body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: var(--bg-color);
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 20px;
+            padding: 15px;
             color: var(--text-primary);
-        }        .container {
-            background: var(--card-bg);
-            width: 100%;
-            max-width: 400px;
-            border-radius: 20px;
-            padding: 25px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            color: var(--text-primary);
+            transition: background 0.3s;
         }
 
-        .header {
+        .app-container {
+            background: var(--card-bg);
+            width: 100%;
+            max-width: 480px;
+            border-radius: 24px;
+            padding: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+            border: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            position: relative;
+        }
+
+        /* Header Navigation */
+        .app-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
-            padding-bottom: 15px;
             border-bottom: 1px solid var(--border-color);
-        }
-
-        .header h2 {
-            color: var(--text-primary);
-            font-size: 1.3rem;
+            padding-bottom: 10px;
         }
 
         .back-btn {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: white;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: #fff;
             border: none;
-            padding: 10px 20px;
-            border-radius: 25px;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: transform 0.2s;
+        }
+
+        .back-btn:hover { transform: translateY(-2px); }
+
+        .top-nav {
+            display: flex;
+            justify-content: space-around;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 5px;
+        }
+
+        .nav-tab {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 1rem;
+            font-weight: 600;
+            padding: 8px 12px;
+            cursor: pointer;
+            position: relative;
+            transition: color 0.3s;
+        }
+
+        .nav-tab.active {
+            color: var(--accent-cyan);
+        }
+
+        .nav-tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -7px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--accent-cyan);
+            border-radius: 2px;
+        }
+
+        /* Tab Panels */
+        .tab-panel { display: none; }
+        .tab-panel.active { display: block; }
+
+        /* Calculator Styles */
+        .display {
+            background: var(--calc-display);
+            border-radius: 16px;
+            padding: 15px 20px;
+            text-align: right;
+            margin-bottom: 15px;
+            min-height: 90px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            word-break: break-all;
+            border: 1px solid var(--border-color);
+        }
+
+        .display .expression {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            min-height: 20px;
+        }
+
+        .display .result {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--accent-cyan);
+        }
+
+        .sci-controls {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .mode-badge {
+            background: var(--btn-bg);
+            padding: 4px 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            border: 1px solid var(--border-color);
+        }
+
+        .grid-buttons {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 8px;
+        }
+
+        .btn {
+            padding: 14px 5px;
+            font-size: 1rem;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            background: var(--btn-bg);
+            color: var(--text-primary);
+            transition: all 0.15s;
+            font-weight: 600;
+        }
+
+        .btn:hover { background: var(--btn-hover); transform: scale(1.03); }
+        .btn:active { transform: scale(0.96); }
+
+        .btn.operator { color: var(--accent-cyan); }
+        .btn.func { color: #e2b342; font-size: 0.85rem; }
+        .btn.clear { background: var(--accent-red); color: white; }
+        .btn.equals { background: var(--accent-green); color: white; grid-column: span 2; }
+
+        /* History Drawer */
+        .history-panel {
+            max-height: 180px;
+            overflow-y: auto;
+            background: var(--calc-display);
+            border-radius: 12px;
+            padding: 10px;
+            margin-top: 10px;
+            font-size: 0.85rem;
+            border: 1px solid var(--border-color);
+        }
+
+        .history-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 6px 0;
+            border-bottom: 1px dashed var(--border-color);
+            cursor: pointer;
+        }
+
+        .history-item:hover { color: var(--accent-cyan); }
+
+        /* Exchange Rate Styles */
+        .exchange-box {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            padding: 10px 0;
+        }
+
+        .currency-row {
+            background: var(--calc-display);
+            padding: 15px;
+            border-radius: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid var(--border-color);
+        }
+
+        .currency-select-btn {
+            background: var(--btn-bg);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            padding: 8px 12px;
+            border-radius: 10px;
             font-weight: bold;
             cursor: pointer;
             display: flex;
             align-items: center;
             gap: 8px;
-            transition: transform 0.2s, box-shadow 0.2s;
         }
 
-        .back-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
-        }
-
-        .calculator {
-            background: var(--calc-bg);
-            border-radius: 20px;
-            padding: 20px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
-        }
-        .display {
-            background: var(--calc-display);
-            color: var(--calc-text);
-            font-size: 2.5rem;
+        .currency-amount {
+            font-size: 1.6rem;
+            font-weight: bold;
+            color: var(--accent-cyan);
+            border: none;
+            background: transparent;
             text-align: right;
+            width: 50%;
+            outline: none;
+        }
+
+        /* Keypad for Currency/Unit Input */
+        .custom-keypad {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        /* Modal for Currency Selection */
+        .modal {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: var(--card-bg);
+            border-radius: 24px;
+            z-index: 100;
             padding: 20px;
-            border-radius: 15px;
+            display: none;
+            flex-direction: column;
+        }
+
+        .modal.active { display: flex; }
+
+        .modal-search {
+            width: 100%;
+            padding: 12px;
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+            background: var(--calc-display);
+            color: var(--text-primary);
             margin-bottom: 15px;
-            min-height: 80px;
+            outline: none;
+        }
+
+        .currency-list {
+            overflow-y: auto;
+            flex-grow: 1;
+        }
+
+        .currency-item {
+            padding: 12px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            cursor: pointer;
+        }
+
+        .currency-item:hover { background: var(--btn-bg); }
+
+        /* Unit Converter Grid */
+        .unit-category-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+
+        .unit-cat-card {
+            background: var(--btn-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 15px 5px;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .unit-cat-card.active, .unit-cat-card:hover {
+            border-color: var(--accent-cyan);
+            color: var(--accent-cyan);
+            background: var(--btn-hover);
+        }
+
+        .unit-cat-card i { font-size: 1.5rem; display: block; margin-bottom: 5px; }
+
+        .unit-convert-box {
+            background: var(--calc-display);
+            padding: 15px;
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
             display: flex;
             flex-direction: column;
-            justify-content: flex-end;
-            word-wrap: break-word;
-            overflow-wrap: break-word;
-        }
-
-        .display .expression {
-            font-size: 1rem;
-            color: #94a3b8;
-            margin-bottom: 5px;
-            min-height: 20px;
-        }
-
-        .display .result {
-            font-size: 2rem;
-            font-weight: bold;
-        }
-
-        .buttons {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
             gap: 10px;
         }
 
-        .btn {
-            padding: 18px;
-            font-size: 1.3rem;
-            border: none;
-            border-radius: 12px;
-            cursor: pointer;
-            background: var(--calc-btn);
-            color: var(--calc-text);
-            transition: all 0.2s;
-            font-weight: 500;
-        }
-
-        .btn:hover {
-            background: var(--calc-btn-hover);
-            transform: scale(1.05);
-        }
-        .btn:active {
-            transform: scale(0.98);
-        }
-
-        .btn.operator {
-            background: var(--primary);
-            color: white;
-        }
-
-        .btn.operator:hover {
-            background: var(--secondary);
-        }
-
-        .btn.equals {
-            background: var(--success);
-            color: white;
-            grid-column: span 2;
-        }
-
-        .btn.equals:hover {
-            background: #38a169;
-        }
-
-        .btn.clear {
-            background: var(--danger);
-            color: white;
-        }
-
-        .btn.clear:hover {
-            background: #e53e3e;
-        }
-
-        .btn.zero {
-            grid-column: span 2;
-        }
-
-        .btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .theme-toggle {
-            background: var(--input-bg);
-            border: 2px solid var(--border-color);
-            color: var(--text-primary);
-            padding: 8px 15px;
-            border-radius: 20px;
-            cursor: pointer;            font-size: 0.9rem;
-            transition: 0.3s;
-        }
-
-        .theme-toggle:hover {
-            border-color: var(--primary);
-        }
-
-        .info-text {
-            text-align: center;
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-            margin-top: 15px;
+        select.unit-select {
+            width: 100%;
             padding: 10px;
-            background: var(--light);
-            border-radius: 10px;
+            background: var(--btn-bg);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            outline: none;
         }
 
-        @media (max-width: 450px) {
-            .container { padding: 20px; }
-            .display { font-size: 2rem; padding: 15px; }
-            .display .result { font-size: 1.8rem; }
-            .btn { padding: 15px; font-size: 1.2rem; }
+        .info-bar {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            text-align: center;
+            margin-top: 10px;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h2>📊 Calculator</h2>
-            <div style="display: flex; gap: 10px; align-items: center;">
-                <button class="theme-toggle" id="theme-toggle">🌙</button>
-                <button class="back-btn" id="back-btn" onclick="goBackToExam()">
-                    ← Back to Exam
-                </button>
-            </div>
+
+    <div class="app-container">
+        <!-- Header -->
+        <div class="app-header">
+            <button class="back-btn" onclick="goBackToExam()">← Back to Exam</button>
+            <button class="back-btn" id="theme-toggle" style="background: var(--btn-bg); color: var(--text-primary);">🌙</button>
         </div>
 
-        <div class="calculator">
+        <!-- Navigation Tabs -->
+        <div class="top-nav">
+            <button class="nav-tab active" onclick="switchTab('calculator', event)">Calculator</button>
+            <button class="nav-tab" onclick="switchTab('exchange', event)">Exchange Rate</button>
+            <button class="nav-tab" onclick="switchTab('converter', event)">Unit Converter</button>
+        </div>
+
+        <!-- TAB 1: SCIENTIFIC CALCULATOR -->
+        <div id="tab-calculator" class="tab-panel active">
+            <div class="sci-controls">
+                <span class="mode-badge" id="angle-mode" onclick="toggleAngleMode()">DEG</span>
+                <span style="cursor: pointer;" onclick="toggleHistory()">📜 History</span>
+            </div>
+
             <div class="display">
-                <div class="expression" id="expression"></div>
-                <div class="result" id="result">0</div>
+                <div class="expression" id="sci-expression"></div>
+                <div class="result" id="sci-result">0</div>
             </div>
-            
-            <div class="buttons">
-                <button class="btn clear" onclick="clearAll()">AC</button>
-                <button class="btn" onclick="deleteChar()">⌫</button>
-                <button class="btn operator" onclick="appendOperator('/')">÷</button>
-                <button class="btn operator" onclick="appendOperator('*')">×</button>
-                                <button class="btn" onclick="appendNumber('7')">7</button>
-                <button class="btn" onclick="appendNumber('8')">8</button>
-                <button class="btn" onclick="appendNumber('9')">9</button>
-                <button class="btn operator" onclick="appendOperator('-')">−</button>
-                
-                <button class="btn" onclick="appendNumber('4')">4</button>
-                <button class="btn" onclick="appendNumber('5')">5</button>
-                <button class="btn" onclick="appendNumber('6')">6</button>
-                <button class="btn operator" onclick="appendOperator('+')">+</button>
-                
-                <button class="btn" onclick="appendNumber('1')">1</button>
-                <button class="btn" onclick="appendNumber('2')">2</button>
-                <button class="btn" onclick="appendNumber('3')">3</button>
-                <button class="btn equals" onclick="calculate()">=</button>
-                
-                <button class="btn zero" onclick="appendNumber('0')">0</button>
-                <button class="btn" onclick="appendDecimal()">.</button>
+
+            <!-- History Panel -->
+            <div class="history-panel" id="history-panel" style="display: none;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                    <strong>History</strong>
+                    <span style="color: var(--accent-red); cursor: pointer;" onclick="clearHistory()">Clear</span>
+                </div>
+                <div id="history-list"><i>No calculations yet</i></div>
+            </div>
+
+            <div class="grid-buttons">
+                <!-- Row 1 Scientific -->
+                <button class="btn func" onclick="appendFunc('sin(')">sin</button>
+                <button class="btn func" onclick="appendFunc('cos(')">cos</button>
+                <button class="btn func" onclick="appendFunc('tan(')">tan</button>
+                <button class="btn func" onclick="appendFunc('log(')">log</button>
+                <button class="btn func" onclick="appendFunc('ln(')">ln</button>
+
+                <!-- Row 2 Scientific -->
+                <button class="btn func" onclick="appendFunc('^')">x^y</button>
+                <button class="btn func" onclick="appendFunc('sqrt(')">√</button>
+                <button class="btn func" onclick="appendFunc('(')">(</button>
+                <button class="btn func" onclick="appendFunc(')')">)</button>
+                <button class="btn func" onclick="appendFunc('π')">π</button>
+
+                <!-- Row 3 Standard -->
+                <button class="btn clear" onclick="clearSci()">AC</button>
+                <button class="btn" onclick="deleteCharSci()">⌫</button>
+                <button class="btn operator" onclick="appendOpSci('/')">÷</button>
+                <button class="btn operator" onclick="appendOpSci('*')">×</button>
+                <button class="btn func" onclick="appendFunc('e')">e</button>
+
+                <!-- Row 4 Numbers -->
+                <button class="btn" onclick="appendNumSci('7')">7</button>
+                <button class="btn" onclick="appendNumSci('8')">8</button>
+                <button class="btn" onclick="appendNumSci('9')">9</button>
+                <button class="btn operator" onclick="appendOpSci('-')">−</button>
+                <button class="btn func" onclick="appendFunc('!')">n!</button>
+
+                <!-- Row 5 Numbers -->
+                <button class="btn" onclick="appendNumSci('4')">4</button>
+                <button class="btn" onclick="appendNumSci('5')">5</button>
+                <button class="btn" onclick="appendNumSci('6')">6</button>
+                <button class="btn operator" onclick="appendOpSci('+')">+</button>
+                <button class="btn func" onclick="appendFunc('^2')">x²</button>
+
+                <!-- Row 6 Numbers -->
+                <button class="btn" onclick="appendNumSci('1')">1</button>
+                <button class="btn" onclick="appendNumSci('2')">2</button>
+                <button class="btn" onclick="appendNumSci('3')">3</button>
+                <button class="btn equals" onclick="calculateSci()">=</button>
+
+                <!-- Row 7 Numbers -->
+                <button class="btn" style="grid-column: span 2;" onclick="appendNumSci('0')">0</button>
+                <button class="btn" onclick="appendNumSci('.')">.</button>
             </div>
         </div>
 
-        <div class="info-text">
-            💡 Your exam progress is saved. Click "Back to Exam" to continue.
+        <!-- TAB 2: EXCHANGE RATE -->
+        <div id="tab-exchange" class="tab-panel">
+            <div class="exchange-box">
+                <div class="currency-row">
+                    <button class="currency-select-btn" onclick="openCurrencyModal('from')">
+                        <span id="from-currency-code">USD</span> ❯
+                    </button>
+                    <input type="text" class="currency-amount" id="from-amount" value="100" readonly>
+                </div>
+
+                <div style="text-align: center; color: var(--accent-cyan); font-size: 1.2rem;">⇅</div>
+
+                <div class="currency-row">
+                    <button class="currency-select-btn" onclick="openCurrencyModal('to')">
+                        <span id="to-currency-code">NGN</span> ❯
+                    </button>
+
+                    <input type="text" class="currency-amount" id="to-amount" value="0" readonly>
+                </div>
+            </div>
+
+            <!-- Keypad for Currency Input -->
+            <div class="custom-keypad">
+                <button class="btn" onclick="pressKey('7')">7</button>
+                <button class="btn" onclick="pressKey('8')">8</button>
+                <button class="btn" onclick="pressKey('9')">9</button>
+                <button class="btn" onclick="pressKey('4')">4</button>
+                <button class="btn" onclick="pressKey('5')">5</button>
+                <button class="btn" onclick="pressKey('6')">6</button>
+                <button class="btn" onclick="pressKey('1')">1</button>
+                <button class="btn" onclick="pressKey('2')">2</button>
+                <button class="btn" onclick="pressKey('3')">3</button>
+                <button class="btn clear" onclick="pressKey('C')">C</button>
+                <button class="btn" onclick="pressKey('0')">0</button>
+                <button class="btn" onclick="pressKey('⌫')">⌫</button>
+            </div>
+            <div class="info-bar" id="exchange-rate-info">Exchange rates updated locally</div>
         </div>
+
+        <!-- TAB 3: UNIT CONVERTER -->
+        <div id="tab-converter" class="tab-panel">
+            <div class="unit-category-grid">
+                <div class="unit-cat-card active" onclick="selectUnitCat('length', this)">📏<br>Length</div>
+                <div class="unit-cat-card" onclick="selectUnitCat('area', this)">📐<br>Area</div>
+                <div class="unit-cat-card" onclick="selectUnitCat('volume', this)">🧊<br>Volume</div>
+                <div class="unit-cat-card" onclick="selectUnitCat('speed', this)">⏱️<br>Speed</div>
+                <div class="unit-cat-card" onclick="selectUnitCat('weight', this)">⚖️<br>Weight</div>
+                <div class="unit-cat-card" onclick="selectUnitCat('temp', this)">🌡️<br>Temp</div>
+                <div class="unit-cat-card" onclick="selectUnitCat('power', this)">⚡<br>Power</div>
+                <div class="unit-cat-card" onclick="selectUnitCat('pressure', this)">⏲️<br>Pressure</div>
+            </div>
+
+            <div class="unit-convert-box">
+                <div>
+                    <label style="font-size: 0.8rem; color: var(--text-secondary);">From:</label>
+                    <select class="unit-select" id="unit-from-select" onchange="convertUnits()"></select>
+                    <input type="text" class="currency-amount" id="unit-from-val" value="1" style="width:100%; text-align:left; margin-top:5px;" readonly>
+                </div>
+                <div>
+                    <label style="font-size: 0.8rem; color: var(--text-secondary);">To:</label>
+                    <select class="unit-select" id="unit-to-select" onchange="convertUnits()"></select>
+                    <input type="text" class="currency-amount" id="unit-to-val" value="0" style="width:100%; text-align:left; margin-top:5px;" readonly>
+                </div>
+            </div>
+
+            <div class="custom-keypad">
+                <button class="btn" onclick="pressUnitKey('7')">7</button>
+                <button class="btn" onclick="pressUnitKey('8')">8</button>
+                <button class="btn" onclick="pressUnitKey('9')">9</button>
+                <button class="btn" onclick="pressUnitKey('4')">4</button>
+                <button class="btn" onclick="pressUnitKey('5')">5</button>
+                <button class="btn" onclick="pressUnitKey('6')">6</button>
+                <button class="btn" onclick="pressUnitKey('1')">1</button>
+                <button class="btn" onclick="pressUnitKey('2')">2</button>
+                <button class="btn" onclick="pressUnitKey('3')">3</button>
+                <button class="btn clear" onclick="pressUnitKey('C')">C</button>
+                <button class="btn" onclick="pressUnitKey('0')">0</button>
+                <button class="btn" onclick="pressUnitKey('⌫')">⌫</button>
+            </div>
+        </div>
+
+        <div class="info-bar">💡 Exam progress auto-saved</div>
+    </div>
+
+    <!-- Currency Selection Modal -->
+    <div class="modal" id="currency-modal">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+            <h3>Select Currency</h3>
+            <button class="back-btn" onclick="closeCurrencyModal()">Close</button>
+        </div>
+        <input type="text" class="modal-search" id="currency-search" placeholder="Search currency..." oninput="filterCurrencies()">
+        <div class="currency-list" id="currency-list"></div>
     </div>
 
     <script>
-        let currentInput = '0';
-        let previousInput = '';
-        let operator = null;
-        let shouldResetScreen = false;
-        let expression = '';
-
-        const resultDisplay = document.getElementById('result');
-        const expressionDisplay = document.getElementById('expression');
-
-        function updateDisplay() {
-            resultDisplay.textContent = formatNumber(currentInput);
-            expressionDisplay.textContent = expression;
-        }
-
-        function formatNumber(num) {
-            if(num === 'Error') return 'Error';
-            const n = parseFloat(num);
-            if(Math.abs(n) >= 1e10 || (Math.abs(n) < 0.0001 && n !== 0)) {
-                return n.toExponential(6);
-            }
-            return num;
-        }
-
-        function appendNumber(num) {            if(shouldResetScreen) {
-                currentInput = '';
-                shouldResetScreen = false;
-            }
-            if(currentInput === '0' && num !== '.') {
-                currentInput = num;
-            } else if(currentInput.length < 15) {
-                currentInput += num;
-            }
-            updateDisplay();
-        }
-
-        function appendDecimal() {
-            if(shouldResetScreen) {
-                currentInput = '0';
-                shouldResetScreen = false;
-            }
-            if(!currentInput.includes('.')) {
-                currentInput += '.';
-            }
-            updateDisplay();
-        }
-
-        function appendOperator(op) {
-            if(operator && !shouldResetScreen) {
-                calculate();
-            }
-            previousInput = currentInput;
-            operator = op;
-            expression = `${formatNumber(previousInput)} ${getOperatorSymbol(op)}`;
-            shouldResetScreen = true;
-            updateDisplay();
-        }
-
-        function getOperatorSymbol(op) {
-            const symbols = { '+': '+', '-': '−', '*': '×', '/': '÷' };
-            return symbols[op] || op;
-        }
-
-        function calculate() {
-            if(!operator || !previousInput) return;
-            
-            const prev = parseFloat(previousInput);
-            const current = parseFloat(currentInput);
-            let result;
-
-            try {
-                switch(operator) {
-                    case '+': result = prev + current; break;
-                    case '-': result = prev - current; break;                    case '*': result = prev * current; break;
-                    case '/': 
-                        if(current === 0) throw new Error('Division by zero');
-                        result = prev / current; 
-                        break;
-                    default: return;
-                }
-                
-                result = Math.round(result * 1e10) / 1e10;
-                
-                expression = `${formatNumber(previousInput)} ${getOperatorSymbol(operator)} ${formatNumber(currentInput)} =`;
-                currentInput = result.toString();
-                operator = null;
-                previousInput = '';
-                shouldResetScreen = true;
-                updateDisplay();
-            } catch(e) {
-                currentInput = 'Error';
-                expression = '';
-                operator = null;
-                previousInput = '';
-                shouldResetScreen = true;
-                updateDisplay();
-                setTimeout(clearAll, 1500);
-            }
-        }
-
-        function clearAll() {
-            currentInput = '0';
-            previousInput = '';
-            operator = null;
-            shouldResetScreen = false;
-            expression = '';
-            updateDisplay();
-        }
-
-        function deleteChar() {
-            if(shouldResetScreen) return;
-            if(currentInput.length === 1 || (currentInput.length === 2 && currentInput.startsWith('-'))) {
-                currentInput = '0';
-            } else {
-                currentInput = currentInput.slice(0, -1);
-            }
-            updateDisplay();
-        }
-
-        // ✅ FIX: Properly return to exam using window.history.back()
+        // --- GENERAL APP LOGIC ---
         function goBackToExam() {
-            // Just go back - the browser history will take us to the exam
-            window.history.back();        }
+            window.history.back();
+        }
 
-        document.addEventListener('keydown', (e) => {
-            e.preventDefault();
-            if(e.key >= '0' && e.key <= '9') appendNumber(e.key);
-            if(e.key === '.') appendDecimal();
-            if(e.key === '+' || e.key === '-' || e.key === '*' || e.key === '/') appendOperator(e.key);
-            if(e.key === 'Enter' || e.key === '=') calculate();
-            if(e.key === 'Escape') clearAll();
-            if(e.key === 'Backspace') deleteChar();
-        });
-
-        document.getElementById('theme-toggle').addEventListener('click', function() {
-            const current = document.documentElement.getAttribute('data-theme');
-            const next = current === 'dark' ? 'light' : 'dark';
-            document.documentElement.setAttribute('data-theme', next);
-            localStorage.setItem('hgdl_calc_theme', next);
-            this.textContent = next === 'dark' ? '☀️' : '🌙';
-        });
-
-        document.addEventListener('DOMContentLoaded', function() {
-            if(localStorage.getItem('hgdl_calc_theme') === 'dark') {
-                document.documentElement.setAttribute('data-theme', 'dark');
-                document.getElementById('theme-toggle').textContent = '☀️';
+        function switchTab(tabId, evt) {
+            document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+            
+            if(evt && evt.target) {
+                evt.target.classList.add('active');
             }
-            updateDisplay();
+            document.getElementById(`tab-${tabId}`).classList.add('active');
+        }
+
+        // Theme Switcher
+        const themeBtn = document.getElementById('theme-toggle');
+        themeBtn.addEventListener('click', () => {
+            const current = document.documentElement.getAttribute('data-theme');
+            const next = current === 'light' ? 'dark' : 'light';
+            document.documentElement.setAttribute('data-theme', next);
+            themeBtn.textContent = next === 'light' ? '🌙' : '☀️';
+        });
+
+        // --- 1. SCIENTIFIC CALCULATOR ENGINE ---
+        let sciExpr = '';
+        let isDeg = true;
+        let sciHistory = [];
+
+        function toggleAngleMode() {
+            isDeg = !isDeg;
+            document.getElementById('angle-mode').textContent = isDeg ? 'DEG' : 'RAD';
+        }
+
+        function appendNumSci(num) {
+            sciExpr += num;
+            updateSciDisplay();
+        }
+
+        function appendOpSci(op) {
+            sciExpr += ` ${op} `;
+            updateSciDisplay();
+        }
+
+        function appendFunc(fn) {
+            sciExpr += fn;
+            updateSciDisplay();
+        }
+
+        function clearSci() {
+            sciExpr = '';
+            document.getElementById('sci-result').textContent = '0';
+            updateSciDisplay();
+        }
+
+        function deleteCharSci() {
+            sciExpr = sciExpr.trimEnd().slice(0, -1);
+            updateSciDisplay();
+        }
+
+        function updateSciDisplay() {
+            document.getElementById('sci-expression').textContent = sciExpr;
+        }
+
+        function toggleHistory() {
+            const p = document.getElementById('history-panel');
+            p.style.display = p.style.display === 'none' ? 'block' : 'none';
+        }
+
+        function clearHistory() {
+            sciHistory = [];
+            renderHistory();
+        }
+
+        function renderHistory() {
+            const list = document.getElementById('history-list');
+            if(sciHistory.length === 0) {
+                list.innerHTML = '<i>No calculations yet</i>';
+                return;
+            }
+            list.innerHTML = sciHistory.map(item => `
+                <div class="history-item" onclick="useHistory('${item.result}')">
+                    <span>${item.expr}</span>
+                    <strong>= ${item.result}</strong>
+                </div>
+            `).join('');
+        }
+
+        function useHistory(val) {
+            sciExpr += val;
+            updateSciDisplay();
+        }
+
+        function factorial(n) {
+            if (n < 0) return NaN;
+            if (n === 0 || n === 1) return 1;
+            let res = 1;
+            for (let i = 2; i <= n; i++) res *= i;
+            return res;
+        }
+
+        function calculateSci() {
+            try {
+                let parsed = sciExpr.trim();
+                if (!parsed) return;
+
+                // Auto insertion of missing multiplication operators
+                // e.g., 45tan -> 45*tan, 5(2) -> 5*(2), 5π -> 5*π, π5 -> π*5
+                parsed = parsed
+                    .replace(/(\d)\s*(sin|cos|tan|log|ln|sqrt|\(|π|e)/g, '$1*$2')
+                    .replace(/(π|e)\s*(\d)/g, '$1*$2')
+                    .replace(/(π|e)\s*(sin|cos|tan|log|ln|sqrt|\()/g, '$1*$2')
+                    .replace(/(\))\s*(\d|sin|cos|tan|log|ln|sqrt|\(|π|e)/g, '$1*$2');
+
+                // Constant replacements
+                parsed = parsed
+                    .replace(/π/g, 'Math.PI')
+                    .replace(/e/g, 'Math.E')
+                    .replace(/sqrt\(/g, 'Math.sqrt(')
+                    .replace(/\^2/g, '**2')
+                    .replace(/\^/g, '**');
+
+                // Auto close unclosed parentheses
+                const openParen = (parsed.match(/\(/g) || []).length;
+                const closeParen = (parsed.match(/\)/g) || []).length;
+                if (openParen > closeParen) {
+                    parsed += ')'.repeat(openParen - closeParen);
+                }
+
+                // Trigonometric Degree/Radian handling
+                if (isDeg) {
+                    parsed = parsed
+                        .replace(/sin\(([^)]+)\)/g, 'Math.sin(($1) * Math.PI / 180)')
+                        .replace(/cos\(([^)]+)\)/g, 'Math.cos(($1) * Math.PI / 180)')
+                        .replace(/tan\(([^)]+)\)/g, 'Math.tan(($1) * Math.PI / 180)');
+                } else {
+                    parsed = parsed
+                        .replace(/sin\(/g, 'Math.sin(')
+                        .replace(/cos\(/g, 'Math.cos(')
+                        .replace(/tan\(/g, 'Math.tan(');
+                }
+
+                parsed = parsed.replace(/log\(/g, 'Math.log10(').replace(/ln\(/g, 'Math.log(');
+
+                // Handle factorials
+                parsed = parsed.replace(/(\d+)!/g, (match, num) => factorial(parseInt(num)));
+
+                let res = eval(parsed);
+                if (typeof res === 'number') {
+                    if (isNaN(res) || !isFinite(res)) {
+                        document.getElementById('sci-result').textContent = 'Error';
+                        return;
+                    }
+                    res = Math.round(res * 1e10) / 1e10;
+                }
+
+                document.getElementById('sci-result').textContent = res;
+                sciHistory.unshift({ expr: sciExpr, result: res });
+                if (sciHistory.length > 10) sciHistory.pop();
+                renderHistory();
+            } catch (err) {
+                document.getElementById('sci-result').textContent = 'Error';
+            }
+        }
+
+        // --- 2. EXPANDED EXCHANGE RATE ENGINE (50+ CURRENCIES) ---
+        const currencies = [
+            { code: 'USD', name: 'US Dollar', rate: 1 },
+            { code: 'NGN', name: 'Nigerian Naira', rate: 1520.50 },
+            { code: 'EUR', name: 'Euro', rate: 0.92 },
+            { code: 'GBP', name: 'British Pound', rate: 0.78 },
+            { code: 'CAD', name: 'Canadian Dollar', rate: 1.37 },
+            { code: 'AUD', name: 'Australian Dollar', rate: 1.51 },
+            { code: 'JPY', name: 'Japanese Yen', rate: 154.20 },
+            { code: 'CNY', name: 'Chinese Yuan', rate: 7.24 },
+            { code: 'INR', name: 'Indian Rupee', rate: 83.50 },
+            { code: 'GHS', name: 'Ghanaian Cedi', rate: 15.20 },
+            { code: 'ZAR', name: 'South African Rand', rate: 18.25 },
+            { code: 'KES', name: 'Kenyan Shilling', rate: 128.50 },
+            { code: 'EGP', name: 'Egyptian Pound', rate: 48.10 },
+            { code: 'AED', name: 'UAE Dirham', rate: 3.67 },
+            { code: 'SAR', name: 'Saudi Riyal', rate: 3.75 },
+            { code: 'CHF', name: 'Swiss Franc', rate: 0.89 },
+            { code: 'BRL', name: 'Brazilian Real', rate: 5.55 },
+            { code: 'RUB', name: 'Russian Ruble', rate: 87.20 },
+            { code: 'TRY', name: 'Turkish Lira', rate: 32.80 },
+            { code: 'KRW', name: 'South Korean Won', rate: 1380.00 },
+            { code: 'SGD', name: 'Singapore Dollar', rate: 1.35 },
+            { code: 'NZD', name: 'New Zealand Dollar', rate: 1.64 },
+            { code: 'MXN', name: 'Mexican Peso', rate: 18.10 },
+            { code: 'SEK', name: 'Swedish Krona', rate: 10.50 },
+            { code: 'NOK', name: 'Norwegian Krone', rate: 10.65 },
+            { code: 'DKK', name: 'Danish Krone', rate: 6.88 },
+            { code: 'PLN', name: 'Polish Zloty', rate: 3.95 },
+            { code: 'ILS', name: 'Israeli Shekel', rate: 3.70 },
+            { code: 'HKD', name: 'Hong Kong Dollar', rate: 7.81 },
+            { code: 'MYR', name: 'Malaysian Ringgit', rate: 4.70 },
+            { code: 'THB', name: 'Thai Baht', rate: 36.50 },
+            { code: 'IDR', name: 'Indonesian Rupiah', rate: 16350 },
+            { code: 'PHP', name: 'Philippine Peso', rate: 58.60 },
+            { code: 'PKR', name: 'Pakistani Rupee', rate: 278.50 },
+            { code: 'BDT', name: 'Bangladeshi Taka', rate: 117.50 },
+            { code: 'MAD', name: 'Moroccan Dirham', rate: 9.95 },
+            { code: 'DZD', name: 'Algerian Dinar', rate: 134.20 },
+            { code: 'TND', name: 'Tunisian Dinar', rate: 3.12 },
+            { code: 'UGX', name: 'Ugandan Shilling', rate: 3720 },
+            { code: 'TZS', name: 'Tanzanian Shilling', rate: 2620 },
+            { code: 'XAF', name: 'Central African CFA', rate: 605 },
+            { code: 'XOF', name: 'West African CFA', rate: 605 },
+            { code: 'ARS', name: 'Argentine Peso', rate: 920.50 },
+            { code: 'CLP', name: 'Chilean Peso', rate: 945.00 },
+            { code: 'COP', name: 'Colombian Peso', rate: 4120.00 },
+            { code: 'QAR', name: 'Qatari Riyal', rate: 3.64 },
+            { code: 'KWD', name: 'Kuwaiti Dinar', rate: 0.306 },
+            { code: 'OMR', name: 'Omani Rial', rate: 0.385 },
+            { code: 'BHD', name: 'Bahraini Dinar', rate: 0.376 },
+            { code: 'JOD', name: 'Jordanian Dinar', rate: 0.709 }
+        ];
+
+        let activeTarget = 'from';
+        let fromCode = 'USD';
+        let toCode = 'NGN';
+
+        function openCurrencyModal(target) {
+            activeTarget = target;
+            document.getElementById('currency-modal').classList.add('active');
+            renderCurrencyList(currencies);
+        }
+
+        function closeCurrencyModal() {
+            document.getElementById('currency-modal').classList.remove('active');
+        }
+
+        function renderCurrencyList(list) {
+            const container = document.getElementById('currency-list');
+            container.innerHTML = list.map(c => `
+                <div class="currency-item" onclick="selectCurrency('${c.code}')">
+                    <span><strong>${c.code}</strong> - ${c.name}</span>
+                </div>
+            `).join('');
+        }
+
+        function filterCurrencies() {
+            const q = document.getElementById('currency-search').value.toLowerCase();
+            const filtered = currencies.filter(c => c.code.toLowerCase().includes(q) || c.name.toLowerCase().includes(q));
+            renderCurrencyList(filtered);
+        }
+
+        function selectCurrency(code) {
+            if (activeTarget === 'from') {
+                fromCode = code;
+                document.getElementById('from-currency-code').textContent = code;
+            } else {
+                toCode = code;
+                document.getElementById('to-currency-code').textContent = code;
+            }
+            closeCurrencyModal();
+            recalculateExchange();
+        }
+
+        function pressKey(k) {
+            let val = document.getElementById('from-amount').value;
+            if (k === 'C') val = '0';
+            else if (k === '⌫') val = val.length > 1 ? val.slice(0, -1) : '0';
+            else {
+                if (val === '0') val = k;
+                else val += k;
+            }
+            document.getElementById('from-amount').value = val;
+            recalculateExchange();
+        }
+
+        function recalculateExchange() {
+            const amt = parseFloat(document.getElementById('from-amount').value) || 0;
+            const fromRate = currencies.find(c => c.code === fromCode)?.rate || 1;
+            const toRate = currencies.find(c => c.code === toCode)?.rate || 1;
+
+            const res = (amt / fromRate) * toRate;
+            document.getElementById('to-amount').value = res.toLocaleString(undefined, { maximumFractionDigits: 4 });
+        }
+
+        // --- 3. UNIT CONVERTER ENGINE ---
+        const unitData = {
+            length: { units: ['Meters', 'Kilometers', 'Miles', 'Feet', 'Inches', 'Centimeters'], rates: [1, 0.001, 0.000621371, 3.28084, 39.3701, 100] },
+            area: { units: ['Sq Meters', 'Sq Kilometers', 'Acres', 'Hectares', 'Sq Feet'], rates: [1, 0.000001, 0.000247105, 0.0001, 10.7639] },
+            volume: { units: ['Liters', 'Milliliters', 'Cubic Meters', 'Gallons (US)'], rates: [1, 1000, 0.001, 0.264172] },
+            speed: { units: ['m/s', 'km/h', 'mph', 'Knots'], rates: [1, 3.6, 2.23694, 1.94384] },
+            weight: { units: ['Kilograms', 'Grams', 'Pounds', 'Ounces', 'Tons'], rates: [1, 1000, 2.20462, 35.274, 0.001] },
+            temp: { units: ['Celsius', 'Fahrenheit', 'Kelvin'], rates: 'custom' },
+            power: { units: ['Watts', 'Kilowatts', 'Horsepower'], rates: [1, 0.001, 0.00134102] },
+            pressure: { units: ['Bar', 'Pascal', 'PSI', 'Atmosphere'], rates: [1, 100000, 14.5038, 0.986923] }
+        };
+
+        let currentCat = 'length';
+
+        function selectUnitCat(cat, el) {
+            document.querySelectorAll('.unit-cat-card').forEach(c => c.classList.remove('active'));
+            el.classList.add('active');
+            currentCat = cat;
+
+            const fromSel = document.getElementById('unit-from-select');
+            const toSel = document.getElementById('unit-to-select');
+            
+            fromSel.innerHTML = unitData[cat].units.map((u, i) => `<option value="${i}">${u}</option>`).join('');
+            toSel.innerHTML = unitData[cat].units.map((u, i) => `<option value="${i}">${u}</option>`).join('');
+            
+            if (toSel.options.length > 1) toSel.selectedIndex = 1;
+            convertUnits();
+        }
+
+        function pressUnitKey(k) {
+            let val = document.getElementById('unit-from-val').value;
+            if (k === 'C') val = '0';
+            else if (k === '⌫') val = val.length > 1 ? val.slice(0, -1) : '0';
+            else {
+                if (val === '0') val = k;
+                else val += k;
+            }
+            document.getElementById('unit-from-val').value = val;
+            convertUnits();
+        }
+
+        function convertUnits() {
+            const val = parseFloat(document.getElementById('unit-from-val').value) || 0;
+            const fromIdx = parseInt(document.getElementById('unit-from-select').value);
+            const toIdx = parseInt(document.getElementById('unit-to-select').value);
+            let res = 0;
+
+            if (currentCat === 'temp') {
+                let celsius = val;
+                if (fromIdx === 1) celsius = (val - 32) * 5/9; // F -> C
+                if (fromIdx === 2) celsius = val - 273.15;    // K -> C
+
+                if (toIdx === 0) res = celsius;
+                if (toIdx === 1) res = (celsius * 9/5) + 32;
+                if (toIdx === 2) res = celsius + 273.15;
+            } else {
+                const rates = unitData[currentCat].rates;
+                const baseVal = val / rates[fromIdx];
+                res = baseVal * rates[toIdx];
+            }
+
+            document.getElementById('unit-to-val').value = Math.round(res * 1e6) / 1e6;
+        }
+
+        // Initialize default UI state
+        document.addEventListener('DOMContentLoaded', () => {
+            recalculateExchange();
+            selectUnitCat('length', document.querySelector('.unit-cat-card'));
         });
     </script>
 </body>

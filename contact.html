@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scholars Breeding | Contact & Community Hub</title>
+    <!-- Google Fonts & Font Awesome Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary: #5850ec;
+            --primary-dark: #4338ca;
+            --primary-light: #eef2ff;
+            --accent-gold: #f59e0b;
+            --whatsapp-green: #25d366;
+            --telegram-blue: #0088cc;
+            --dark-bg: #0b0f17;
+            --card-bg: #ffffff;
+            --body-bg: #f8fafc;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            --radius-pill: 50px;
+            --radius-card: 20px;
+            --shadow-subtle: 0 10px 30px -5px rgba(0, 0, 0, 0.05);
+            --shadow-glow: 0 15px 35px -5px rgba(88, 80, 236, 0.25);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background-color: var(--body-bg);
+            color: var(--text-main);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* --- Header matching screenshot --- */
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            padding: 14px 0;
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .brand-link {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            text-decoration: none;
+        }
+
+        .brand-logo {
+            height: 52px;
+            width: auto;
+            object-fit: contain;
+        }
+
+        .brand-title {
+            font-size: 1px;
+            font-weight: 300;
+            color: #667eea;
+            letter-spacing: -0.01em;
+            font-style: verdana;
+            text-transform: uppercase;
+            line-height: 1.1;
+        }
+
+        .nav-buttons {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .btn-pill {
+            padding: 10px 22px;
+            border-radius: var(--radius-pill);
+            font-size: 0.95rem;
+            font-weight: 700;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.25s ease;
+            font-style: italic;
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: #1e293b;
+            border: 1.5px solid #cbd5e1;
+        }
+
+        .btn-outline:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            background: var(--primary-light);
+        }
+
+        .btn-solid {
+            background: var(--primary);
+            color: white;
+            border: 1.5px solid var(--primary);
+            box-shadow: var(--shadow-glow);
+        }
+
+        .btn-solid:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        /* --- Hero Header Section --- */
+        .hero {
+            background: linear-gradient(135deg, #090d16 0%, #1e1b4b 50%, #312e81 100%);
+            color: white;
+            padding: 80px 20px 130px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -20%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(88, 80, 236, 0.35) 0%, rgba(0,0,0,0) 70%);
+            pointer-events: none;
+        }
+
+        .hero-inner {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 6px 18px;
+            border-radius: var(--radius-pill);
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #f1f5f9;
+            margin-bottom: 24px;
+            backdrop-filter: blur(8px);
+        }
+
+        .hero-badge i {
+            color: var(--accent-gold);
+        }
+
+        .hero h1 {
+            font-size: 2.75rem;
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 16px;
+            letter-spacing: -0.02em;
+            background: linear-gradient(180deg, #ffffff 0%, #cbd5e1 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            font-size: 1.1rem;
+            color: #94a3b8;
+            max-width: 640px;
+            margin: 0 auto;
+        }
+
+        /* --- Main Content Box --- */
+        .main-wrapper {
+            max-width: 1000px;
+            margin: -70px auto 80px;
+            padding: 0 20px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .content-card {
+            background: var(--card-bg);
+            border-radius: var(--radius-card);
+            padding: 48px;
+            box-shadow: var(--shadow-subtle);
+            border: 1px solid var(--border-color);
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .section-title h2 {
+            font-size: 1.85rem;
+            font-weight: 800;
+            color: var(--text-main);
+            margin-bottom: 10px;
+            letter-spacing: -0.02em;
+        }
+
+        .section-title p {
+            color: var(--text-muted);
+            font-size: 0.98rem;
+            max-width: 620px;
+            margin: 0 auto;
+        }
+
+        /* Channels Cards Grid */
+        .channel-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+            margin-bottom: 48px;
+        }
+
+        .channel-card {
+            border-radius: 16px;
+            padding: 28px;
+            text-decoration: none;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .channel-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .channel-card.whatsapp {
+            background: linear-gradient(135deg, #25d366 0%, #128c7e 100%);
+        }
+
+        .channel-card.telegram {
+            background: linear-gradient(135deg, #0088cc 0%, #005580 100%);
+        }
+
+        .card-icon {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .card-icon .badge {
+            background: rgba(255, 255, 255, 0.25);
+            font-size: 0.75rem;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .card-body h3 {
+            font-size: 1.35rem;
+            font-weight: 800;
+            margin-bottom: 10px;
+        }
+
+        .card-body p {
+            font-size: 0.9rem;
+            opacity: 0.92;
+            line-height: 1.5;
+            margin-bottom: 24px;
+        }
+
+        .card-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            padding: 12px 20px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            text-align: center;
+            backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: background 0.2s;
+        }
+
+        .channel-card:hover .card-btn {
+            background: rgba(255, 255, 255, 0.35);
+        }
+
+        /* Steps Instruction Container */
+        .instruction-box {
+            background: #f8fafc;
+            border: 1.5px dashed #cbd5e1;
+            border-radius: 16px;
+            padding: 28px;
+            margin-bottom: 48px;
+        }
+
+        .instruction-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            color: var(--text-main);
+            font-size: 1.05rem;
+            font-weight: 700;
+        }
+
+        .instruction-header i {
+            color: var(--primary);
+            font-size: 1.2rem;
+        }
+
+        .steps-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+        }
+
+        .step-card {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .step-number {
+            background: var(--primary);
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 0.85rem;
+            flex-shrink: 0;
+        }
+
+        .step-text {
+            font-size: 0.9rem;
+            color: var(--text-main);
+            line-height: 1.5;
+        }
+
+        /* Email Card Section */
+        .email-card {
+            background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+            border-radius: 16px;
+            padding: 36px;
+            text-align: center;
+            position: relative;
+            border: 1px solid var(--border-color);
+        }
+
+        .email-avatar {
+            width: 56px;
+            height: 56px;
+            background: var(--primary-light);
+            color: var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            margin: 0 auto 16px;
+            box-shadow: 0 4px 12px rgba(88, 80, 236, 0.15);
+        }
+
+        .email-card h3 {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: var(--text-main);
+            margin-bottom: 6px;
+        }
+
+        .email-card p {
+            color: var(--text-muted);
+            font-size: 0.92rem;
+            margin-bottom: 20px;
+        }
+
+        .email-wrapper {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            background: white;
+            padding: 8px 12px 8px 20px;
+            border-radius: 12px;
+            border: 1px solid #cbd5e1;
+            max-width: 100%;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+
+        .email-address {
+            color: var(--primary);
+            font-weight: 800;
+            font-size: 0.6rem;
+            text-decoration: none;
+            word-break: break-all;
+        }
+
+        .copy-btn {
+            background: #f1f5f9;
+            border: 1px solid #cbd5e1;
+            color: var(--text-main);
+            padding: 8px 14px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 700;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .copy-btn:hover {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        /* Features Bar */
+        .features-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 40px;
+            padding-top: 32px;
+            border-top: 1px solid var(--border-color);
+            text-align: center;
+        }
+
+        .feature-box i {
+            font-size: 1.6rem;
+            color: var(--accent-gold);
+            margin-bottom: 10px;
+        }
+
+        .feature-box h4 {
+            font-size: 0.95rem;
+            font-weight: 800;
+            color: var(--text-main);
+            margin-bottom: 4px;
+        }
+
+        .feature-box p {
+            font-size: 0.82rem;
+            color: var(--text-muted);
+        }
+
+        /* --- Luxury Footer --- */
+        .footer {
+            background: var(--dark-bg);
+            color: white;
+            padding: 50px 20px 30px;
+            text-align: center;
+            border-top: 1px solid #1e293b;
+        }
+
+        .footer h3 {
+            font-size: 1.3rem;
+            font-weight: 800;
+            margin-bottom: 6px;
+            letter-spacing: -0.01em;
+        }
+
+        .footer p {
+            color: #94a3b8;
+            font-size: 0.88rem;
+        }
+
+        .footer-nav {
+            margin: 24px 0;
+            display: flex;
+            gap: 24px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .footer-nav a {
+            color: #cbd5e1;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: color 0.2s ease;
+        }
+
+        .footer-nav a:hover {
+            color: white;
+        }
+
+        .footer-bottom {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #1e293b;
+            font-size: 0.82rem;
+            color: #64748b;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .brand-title { font-size: 1.25rem; }
+            .brand-logo { height: 42px; }
+            .hero h1 { font-size: 2rem; }
+            .content-card { padding: 28px 20px; }
+            .btn-pill { padding: 8px 16px; font-size: 0.85rem; }
+            .email-wrapper { flex-direction: column; width: 100%; gap: 10px; padding: 16px; }
+            .copy-btn { width: 100%; justify-content: center; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Matching Index Navigation -->
+    <header class="header">
+        <div class="header-container">
+            <a href="index.html" class="brand-link">
+                <img src="logo.png" alt="Scholars Breeding Platform" class="brand-logo" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎓</text></svg>'">
+                <span class="brand-title">Scholars Breeding</span>
+            </a>
+
+                
+                <a href="dashboard.html" class="btn-pill btn-solid">
+                    <i class="fa-solid fa-lock"></i> Login
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Header -->
+    <section class="hero">
+        <div class="hero-inner">
+            <div class="hero-badge">
+                <i class="fa-solid fa-award"></i> Verified Support & Student Community
+            </div>
+            <h1>Connect & Study With Us</h1>
+            <p>Access direct support, real-time exam notifications, and official WhatsApp & Telegram study communities for WAEC, NECO, GCE & JAMB excellence.</p>
+        </div>
+    </section>
+
+    <!-- Main Content Card -->
+    <main class="main-wrapper">
+        <div class="content-card">
+
+            <!-- Section Title -->
+            <div class="section-title">
+                <h2>Join Our Official Channels</h2>
+                <p>Follow our announcement channels below. Access direct links to join our active student discussion and study groups in the channel descriptions.</p>
+            </div>
+
+            <!-- Channels Grid -->
+            <div class="channel-grid">
+                <!-- WhatsApp Card -->
+                <a href="https://whatsapp.com/channel/0029VbCtX3O0G0XmY0Iq4t2U" target="_blank" class="channel-card whatsapp">
+                    <div>
+                        <div class="card-icon">
+                            <i class="fa-brands fa-whatsapp"></i>
+                            <span class="badge">Official</span>
+                        </div>
+                        <div class="card-body">
+                            <h3>WhatsApp Channel</h3>
+                            <p>Daily practice questions, syllabus updates, exam tips, and direct links to active WhatsApp student study groups.</p>
+                        </div>
+                    </div>
+                    <div class="card-btn">
+                        Join WhatsApp Channel <i class="fa-solid fa-arrow-right"></i>
+                    </div>
+                </a>
+
+                <!-- Telegram Card -->
+                <a href="https://t.me/Scholarsbreedchannel" target="_blank" class="channel-card telegram">
+                    <div>
+                        <div class="card-icon">
+                            <i class="fa-brands fa-telegram"></i>
+                            <span class="badge">Official</span>
+                        </div>
+                        <div class="card-body">
+                            <h3>Telegram Channel</h3>
+                            <p>Past question PDFs, lesson notes, instant announcements, and direct access to Telegram discussion groups.</p>
+                        </div>
+                    </div>
+                    <div class="card-btn">
+                        Join Telegram Channel <i class="fa-solid fa-arrow-right"></i>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Workflow Guide -->
+            <div class="instruction-box">
+                <div class="instruction-header">
+                    <i class="fa-solid fa-circle-nodes"></i> How to Reach Our Student Study Groups:
+                </div>
+                <div class="steps-grid">
+                    <div class="step-card">
+                        <span class="step-number">1</span>
+                        <span class="step-text">Click on either <b>WhatsApp</b> or <b>Telegram</b> channel buttons above.</span>
+                    </div>
+                    <div class="step-card">
+                        <span class="step-number">2</span>
+                        <span class="step-text">Tap <b>Follow</b> or <b>Join</b> in the channel header.</span>
+                    </div>
+                    <div class="step-card">
+                        <span class="step-number">3</span>
+                        <span class="step-text">Open the <b>Channel Description / Pinned Post</b> to enter our main student group.</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Direct Email Section -->
+            <div class="email-card">
+                <div class="email-avatar">
+                    <i class="fa-solid fa-shield-halved"></i>
+                </div>
+                <h3>Verified Email Support</h3>
+                <p>Need account assistance, payment support, or platform inquiries? Message our verified inbox directly:</p>
+                
+                <div class="email-wrapper">
+                    <a href="mailto:scholarsbreeding.top@gmail.com" class="email-address" id="emailText">scholarsbreeding.top@gmail.com</a>
+                    <button class="copy-btn" onclick="copyEmail()">
+                        <i class="fa-regular fa-copy" id="copyIcon"></i> <span id="copyText">Copy</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Features Summary Row -->
+            <div class="features-row">
+                <div class="feature-box">
+                    <i class="fa-solid fa-graduation-cap"></i>
+                    <h4>EXAM EXCELLENCE</h4>
+                    <p>WAEC, NECO, GCE & JAMB Prep</p>
+                </div>
+                <div class="feature-box">
+                    <i class="fa-solid fa-clock-rotate-left"></i>
+                    <h4>FAST RESPONSE</h4>
+                    <p>Dedicated Email Support</p>
+                </div>
+                <div class="feature-box">
+                    <i class="fa-solid fa-user-group"></i>
+                    <h4>STUDENT COMMUNITY</h4>
+                    <p>Interactive Discussion Groups</p>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <h3>Scholars Breeding Platform</h3>
+        <p>Global Academic Excellence for WAEC, NECO, GCE & JAMB Prep</p>
+        
+        <div class="footer-nav">
+            <a href="about.html">About Us</a>
+            <a href="privacy.html">Privacy Policy</a>
+            <a href="contact.html">Contact Us</a>
+        </div>
+
+        <p>Made with passion for academic excellence</p>
+        <div class="footer-bottom">
+            © 2026 Scholars Breeding. All Rights Reserved.
+        </div>
+    </footer>
+
+    <!-- Copy Email Script -->
+    <script>
+        function copyEmail() {
+            const email = document.getElementById("emailText").innerText;
+            navigator.clipboard.writeText(email).then(() => {
+                const copyText = document.getElementById("copyText");
+                const copyIcon = document.getElementById("copyIcon");
+                
+                copyText.innerText = "Copied!";
+                copyIcon.className = "fa-solid fa-check";
+                
+                setTimeout(() => {
+                    copyText.innerText = "Copy";
+                    copyIcon.className = "fa-regular fa-copy";
+                }, 2500);
+            });
+        }
+    </script>
+</body>
+</html>
