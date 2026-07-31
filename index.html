@@ -34,10 +34,10 @@
             --primary: #667eea;
             --secondary: #764ba2;
             --gold: #ffd700;
-            --dark: black;
+            --dark: #1a202c;
             --light: #f7fafc;
             --white: #ffffff;
-            --text-gray: black;
+            --text-gray: #4a5568;
             --border-color: #e2e8f0;
             --success: #48bb78;
             --danger: #f56565;
@@ -72,13 +72,14 @@
         .logo { width: 45px; height: 45px; object-fit: contain; }
         .school-name h1 { 
             color: var(--primary); 
-            font-size: 5.8rem; 
+            font-size: 1.4rem; 
             font-weight: 800; 
             letter-spacing: -0.5px;
+            line-height: 1.2;
         }
         .school-name p { 
             color: var(--text-gray); 
-            font-size: 5.75px; 
+            font-size: 0.8rem; 
             margin-top: 1px; 
             font-weight: 500;
         }
@@ -190,15 +191,17 @@
         }
 
         /* ============ HERO SLIDER ============ */
-        .hero-slider { position: relative; height: 900px; overflow: hidden; background: #000; }
+        .hero-slider { position: relative; height: 500px; overflow: hidden; background: #000; }
         .slide {
             position: absolute; width: 100%;
-           height: 100%;
-           opacity: 0;
-            transition: opacity 1s ease-in-out; background-size: cover;
-            background-position: center; display: flex; align-items: center; justify-content: center;
-
-
+            height: 100%;
+            opacity: 0;
+            transition: opacity 1s ease-in-out; 
+            background-size: cover;
+            background-position: center; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
         }
         .slide.active { opacity: 1; }
         .slide::before {
@@ -235,6 +238,7 @@
             transition: all 0.3s ease;
             display: inline-flex;
             align-items: center;
+            justify-content: center;
             gap: 8px;
         }
         .hero-btn-large:hover { transform: translateY(-2px); box-shadow: 0 12px 25px rgba(255, 215, 0, 0.4); }
@@ -252,6 +256,7 @@
             transition: all 0.3s ease;
             display: inline-flex;
             align-items: center;
+            justify-content: center;
             gap: 8px;
         }
         .hero-btn-outline:hover { background: white; color: var(--dark); }
@@ -283,6 +288,7 @@
             font-size: 0.95rem;
             display: inline-flex;
             align-items: center;
+            justify-content: center;
             gap: 10px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.08);
             transition: all 0.3s ease;
@@ -311,19 +317,25 @@
             justify-content: center;
             gap: 8px;
         }
-        .video-wrapper {
+        
+        .shorts-container {
             position: relative;
             width: 100%;
-            border-radius: 12px;
+            max-width: 360px;
+            aspect-ratio: 9 / 16;
+            margin: 20px auto;
+            border-radius: 16px;
             overflow: hidden;
-            background: #000;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
         }
-        .video-wrapper video {
+
+        .shorts-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
             width: 100%;
-            max-height: 450px;
-            display: block;
-            border-radius: 12px;
-            outline: none;
+            height: 100%;
+            border: none;
         }
 
         /* ============ SECTIONS ============ */
@@ -474,7 +486,7 @@
         }
 
         .wizard-btns { display: flex; gap: 10px; margin-top: 20px; }
-        .btn-prev, .btn-next { flex: 1; padding: 12px; border: none; border-radius: 8px; font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: 0.2s; }
+        .btn-prev, .btn-next { flex: 1; padding: 12px; border: none; border-radius: 8px; font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: 0.2s; text-align: center; }
         .btn-prev { background: var(--light); color: var(--text-gray); }
         .btn-prev:hover { background: var(--border-color); }
         .btn-next { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; }
@@ -491,7 +503,7 @@
 
         .id-display-box { background: #f0f4f8; border: 2px dashed var(--primary); border-radius: 10px; padding: 15px; margin: 15px 0; text-align: center; }
         .id-text { font-size: 1.4rem; font-weight: 800; color: var(--primary); letter-spacing: 1px; margin: 8px 0; word-break: break-all; }
-        .copy-btn { background: var(--primary); color: white; border: none; padding: 6px 15px; border-radius: 15px; cursor: pointer; font-weight: 600; font-size: 0.85rem; }
+        .copy-btn { background: var(--primary); color: white; border: none; padding: 8px 18px; border-radius: 15px; cursor: pointer; font-weight: 600; font-size: 0.85rem; }
         
         .warning-box { background: #fff5f5; border: 1px solid #feb2b2; border-left: 4px solid var(--danger); color: #c53030; padding: 15px; border-radius: 6px; text-align: left; font-size: 0.85rem; margin-bottom: 15px; }
         .warning-box strong { display: block; margin-bottom: 6px; font-size: 0.9rem; }
@@ -500,9 +512,9 @@
 
         /* Responsive adjustments */
         @media (max-width: 768px) {
-            .school-name h1 { font-size: 1.1rem; }
-            .school-name p { display: none; }
-            .hero-slider { height: 420px; }
+            .school-name h1 { font-size: 1.15rem; }
+            .school-name p { font-size: 0.7rem; }
+            .hero-slider { height: 480px; }
             .slide-content h2 { font-size: 1.6rem; }
             .slide-content p { font-size: 0.9rem; }
             .hero-action-group { flex-direction: column; width: 100%; gap: 10px; }
@@ -511,36 +523,6 @@
             .wizard-container { margin: 15px; padding: 18px; }
             .social-grid-container { flex-direction: column; gap: 10px; padding: 0 10px; }
             .social-action-btn { width: 100%; justify-content: center; }
-
-
-
-.shorts-container {
-  position: relative;
-  width: 100%;
-  max-width: 360px; /* Limits maximum width so it stays phone-sized on large screens */
-  aspect-ratio: 9 / 16; /* Maintains the native vertical video ratio */
-  margin: 20px auto; /* Centers the container */
-  border-radius: 16px;
-  overflow: hidden;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-}
-
-.shorts-container iframe {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  border: none;
-}
-
-
-
-
-
-
-
-
         }
     </style>
 </head>
@@ -591,7 +573,7 @@
                     <h2>📚 Practice Your WAEC & NECO Exams</h2>
                     <p>Join thousands of successful students globally who have transformed their performance through our targeted practice exams.</p>
                     <div class="hero-action-group">
-                        <button class="hero-btn-large" onclick="startRegistration()">🚀 Get Access ID </button>
+                        <button class="hero-btn-large" onclick="startRegistration()">🚀 Get Access ID</button>
                         <button class="hero-btn-outline" onclick="showLogin()">🔐 Student Login</button>
                     </div>
                 </div>
@@ -644,24 +626,17 @@
             <!-- ✅ VIDEO INTRO SECTION -->
             <div class="video-intro-container">
                 <h3>📹 Watch Platform Introduction</h3>
-             <div class="shorts-container">
-  <iframe 
-    src="https://www.youtube.com/embed/jIHzgMWi4k8" 
-    title="YouTube Short" 
-    frameborder="0" 
-    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-    allowfullscreen>
-  </iframe>
-</div>
-
+                <div class="shorts-container">
+                    <iframe 
+                      src="https://www.youtube.com/embed/jIHzgMWi4k8" 
+                      title="YouTube Short" 
+                      frameborder="0" 
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                      allowfullscreen>
+                    </iframe>
                 </div>
             </div>
         </section>
-
-
-
-
-
 
         <!-- Subject Categories Section -->
         <section class="curriculum-section">
@@ -769,7 +744,7 @@
             <h2>Ready to Start Your Learning Journey?</h2>
             <p>Join the Scholars Breeding community today and take the first step towards academic excellence.</p>
             <div class="cta-buttons">
-                <button class="btn btn-primary" onclick="startRegistration()">🚀 Get Started Now </button>
+                <button class="btn btn-primary" onclick="startRegistration()">🚀 Get Started Now</button>
                 <a href="dashboard.html" class="btn btn-secondary">🔐 Student Login</a>
             </div>
         </section>
@@ -872,7 +847,7 @@
                     <div class="warning-box">
                         <strong>⚠️ IMPORTANT WARNINGS - PLEASE READ CAREFULLY:</strong>
                         <ul>
-                            <li><strong>Device Sharing Tracking Limit:</strong> This unique Access ID tracks your individual device hardware signatures. It can be initialized on a <strong>maximum limit of 1 devices</strong>. Sharing or distribution across more than 1 phones/browsers triggers an automatic, permanent account ban , so dont share your ID to Avoid been ban.</li>
+                            <li><strong>Device Sharing Tracking Limit:</strong> This unique Access ID tracks your individual device hardware signatures. It can be initialized on a <strong>maximum limit of 1 devices</strong>. Sharing or distribution across more than 1 phones/browsers triggers an automatic, permanent account ban, so don't share your ID to avoid being banned.</li>
                             <li><strong>Concurrent User Monitoring:</strong> Multiple parallel sessions across active locations will match against system tracking tags and instantly freeze study progress logs.</li>
                             <li><strong>1-Year Validity:</strong> Your access expires exactly 1 year from today. After expiration, you will need to renew your active subscription.</li>
                             <li><strong>Never Share:</strong> Keep your records secure. Your internal personal exam scores and progress analytical trends are securely mapped exclusively to this single token.</li>
